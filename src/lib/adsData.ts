@@ -20,16 +20,6 @@ export interface Ad {
 
 export const ads: Ad[] = [
     {
-        title: 'החנות החברתית',
-        summary: 'כנסו לחנות לחיים טובים יותר',
-        url: 'https://heirut-shop.vercel.app/',
-        color: 'from-emerald-600 to-teal-700',
-        image: '/images/freedom-store.png',
-        hoverTitle: 'החנות החברתית',
-        hoverText: 'מוצרים נבחרים לבריאות, חקלאות, טכנולוגיה ועוד',
-        footerText: 'לחנות שלנו',
-    },
-    {
         title: 'בתי הפיוס',
         summary: 'יש לך סיכסוך? לחץ לפתרון',
         url: 'https://chachmim.vercel.app/',
@@ -52,7 +42,7 @@ export const ads: Ad[] = [
     {
         title: 'ועדי שכונות',
         summary: 'הצטרף לוועד השכונה שלך',
-        url: 'https://www.melecshop.com/page/peace-on-earth_VRHH',
+        url: 'https://neighborhoods-il.vercel.app/',
         color: 'from-blue-600 to-cyan-600',
         image: '/images/news/vaadei-shchunot.png',
         hoverTitle: 'ועדי שכונות',
@@ -121,5 +111,15 @@ export const ads: Ad[] = [
         hoverText: 'כל יתרונות השכונה תחת קורת גג אחת',
         footerText: 'לאתר הראשי – קהילה בשכונה',
         extraClass: 'ring-1 ring-purple-500/40',
+    },
+    {
+        title: 'החנות החברתית',
+        summary: 'כנסו לחנות לחיים טובים יותר',
+        url: 'https://heirut-shop.vercel.app/',
+        color: 'from-emerald-600 to-teal-700',
+        image: '/images/freedom-store.png',
+        hoverTitle: 'החנות החברתית',
+        hoverText: 'מוצרים נבחרים לבריאות, חקלאות, טכנולוגיה ועוד',
+        footerText: 'לחנות שלנו',
     },
 ];
