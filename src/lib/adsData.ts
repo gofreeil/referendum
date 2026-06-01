@@ -52,7 +52,7 @@ export const ads: Ad[] = [
     {
         title: 'מבקר רשויות המדינה',
         summary: 'מבקרים את הרשויות',
-        url: 'https://right-to-live.vercel.app/',
+        url: 'https://criticism.vercel.app/',
         color: 'from-blue-700 to-indigo-700',
         image: '/images/mevaker-rashuyot.png',
         hoverTitle: 'מבקר רשויות המדינה',
