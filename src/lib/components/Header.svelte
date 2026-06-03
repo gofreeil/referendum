@@ -67,7 +67,7 @@
             if (saved) locale.set(saved);
         } catch {}
 
-        // Seed a random counter — matches the look of the main community site
+        // Seed a random counter - matches the look of the main community site
         onlineUsers = Math.floor(Math.random() * 20) + 3;
         const usersInterval = setInterval(() => {
             onlineUsers = Math.floor(Math.random() * 20) + 3;
@@ -80,7 +80,7 @@
         };
     });
 
-    // tFn: תרגום reactive — $t אסור ב-Svelte 5
+    // tFn: תרגום reactive - $t אסור ב-Svelte 5
     let _loc = $state(get(locale));
     $effect(() => locale.subscribe(l => (_loc = l)));
     const tFn = (k: string) => { void _loc; return get(t)(k); };
