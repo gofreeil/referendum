@@ -30,6 +30,11 @@
 <div class="min-h-screen flex flex-col bg-[#0f172a]">
     <Header />
 
+    <div class="hero-banner">
+        <img src="/images/hero-banner.png" alt="כנסת ישראל, דגל המדינה ומאזני הצדק" />
+        <div class="hero-banner-overlay"></div>
+    </div>
+
     <div class="layout-container flex-grow">
         <RightAdBanner />
         <main id="main-content" tabindex="-1" class="main-content">
@@ -54,6 +59,32 @@
     .main-content {
         flex: 1;
         min-width: 0;
+    }
+
+    .hero-banner {
+        position: relative;
+        width: 100%;
+        max-height: 220px;
+        overflow: hidden;
+        border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+    }
+    .hero-banner img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+    }
+    .hero-banner-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0) 40%, rgba(15, 23, 42, 0.7) 100%);
+        pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+        .hero-banner {
+            max-height: 140px;
+        }
     }
 
     @media (max-width: 1024px) {
