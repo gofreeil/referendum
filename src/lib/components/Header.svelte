@@ -99,11 +99,11 @@
                         class="flex items-center gap-2.5 flex-1 min-w-0"
                     >
                         <div class="relative">
-                            <div class="h-14 w-14 flex-shrink-0">
+                            <div class="h-14 w-14 flex-shrink-0 rounded-full overflow-hidden bg-[#0c1838] ring-2 ring-blue-400/40">
                                 <img
                                     src="/images/referendum-logo.png"
                                     alt="משאלי העם"
-                                    class="w-full h-full object-contain"
+                                    class="w-full h-full object-cover scale-[1.35]"
                                 />
                             </div>
                         </div>
@@ -167,12 +167,12 @@
                 <div class="relative group">
                     <a
                         href="/"
-                        class="flex h-24 w-24 items-center justify-center transition-transform hover:scale-105"
+                        class="flex h-24 w-24 items-center justify-center rounded-full overflow-hidden bg-[#0c1838] ring-2 ring-blue-400/40 transition-transform hover:scale-105"
                     >
                         <img
                             src="/images/referendum-logo.png"
                             alt="משאלי העם"
-                            class="w-full h-full object-contain"
+                            class="w-full h-full object-cover scale-[1.35]"
                         />
                     </a>
                     <div
