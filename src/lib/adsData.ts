@@ -109,7 +109,7 @@ export const ads: Ad[] = [
         image: '/images/community-neighborhood.png',
         hoverTitle: 'קהילה בשכונה',
         hoverText: 'כל יתרונות השכונה תחת קורת גג אחת',
-        footerText: 'לאתר הראשי – קהילה בשכונה',
+        footerText: 'תהנה מכל היתרונות של השכונה שלך',
         extraClass: 'ring-1 ring-purple-500/40',
     },
     {
