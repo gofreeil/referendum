@@ -540,3 +540,113 @@ export function getSideColor(issue: Issue, sideId: string): string {
 export function getSideLabel(issue: Issue, sideId: string): string {
     return issue.sides.find((s) => s.id === sideId)?.label || sideId;
 }
+
+export type Distribution = { sideId: string; pct: number };
+export type Statistics = {
+    byAge: { group: string; distribution: Distribution[]; count: number }[];
+    byRegion: { region: string; distribution: Distribution[]; count: number }[];
+    byGender: { gender: string; distribution: Distribution[]; count: number }[];
+    byEducation: { level: string; distribution: Distribution[]; count: number }[];
+    timeline: { day: string; votes: number }[];
+    engagement: { dailyAverage: number; peakDay: string; completionRate: number; sharesCount: number };
+};
+
+function seededRand(seed: number): () => number {
+    let s = seed;
+    return () => {
+        s = (s * 1664525 + 1013904223) >>> 0;
+        return s / 0xffffffff;
+    };
+}
+
+function normalizeDistribution(issue: Issue, rng: () => number, bias: number = 0): Distribution[] {
+    const base = issue.pollOptions.map((opt) => {
+        const baseRatio = opt.votes / issue.totalVotes;
+        const noise = (rng() - 0.5) * 0.25 + bias * (rng() - 0.5);
+        return { sideId: opt.sideId, raw: Math.max(0.02, baseRatio + noise) };
+    });
+    const total = base.reduce((s, x) => s + x.raw, 0);
+    const result = base.map((x) => ({ sideId: x.sideId, pct: Math.round((x.raw / total) * 100) }));
+    const diff = 100 - result.reduce((s, x) => s + x.pct, 0);
+    if (result.length > 0) result[0].pct += diff;
+    return result;
+}
+
+export function getStatistics(issue: Issue): Statistics {
+    const seed = parseInt(issue.id, 10) * 9999 + 7;
+    const rng = seededRand(seed);
+
+    const ages = [
+        { group: '18-29', share: 0.18 },
+        { group: '30-44', share: 0.30 },
+        { group: '45-59', share: 0.28 },
+        { group: '60-74', share: 0.18 },
+        { group: '75+', share: 0.06 }
+    ];
+    const regions = [
+        { region: 'צפון', share: 0.16 },
+        { region: 'חיפה', share: 0.12 },
+        { region: 'מרכז', share: 0.32 },
+        { region: 'תל אביב', share: 0.16 },
+        { region: 'ירושלים', share: 0.13 },
+        { region: 'דרום', share: 0.11 }
+    ];
+    const genders = [
+        { gender: 'נשים', share: 0.51 },
+        { gender: 'גברים', share: 0.47 },
+        { gender: 'אחר', share: 0.02 }
+    ];
+    const educations = [
+        { level: 'תיכון', share: 0.24 },
+        { level: 'תואר ראשון', share: 0.41 },
+        { level: 'תואר שני+', share: 0.23 },
+        { level: 'הכשרה מקצועית', share: 0.12 }
+    ];
+
+    const byAge = ages.map((a, i) => ({
+        group: a.group,
+        count: Math.round(issue.totalVotes * a.share),
+        distribution: normalizeDistribution(issue, rng, i < 2 ? 0.3 : -0.2)
+    }));
+    const byRegion = regions.map((r, i) => ({
+        region: r.region,
+        count: Math.round(issue.totalVotes * r.share),
+        distribution: normalizeDistribution(issue, rng, i === 3 ? 0.4 : i === 4 ? -0.3 : 0.1)
+    }));
+    const byGender = genders.map((g, i) => ({
+        gender: g.gender,
+        count: Math.round(issue.totalVotes * g.share),
+        distribution: normalizeDistribution(issue, rng, i === 0 ? 0.15 : -0.1)
+    }));
+    const byEducation = educations.map((e, i) => ({
+        level: e.level,
+        count: Math.round(issue.totalVotes * e.share),
+        distribution: normalizeDistribution(issue, rng, i >= 2 ? 0.25 : -0.1)
+    }));
+
+    const days = 14;
+    const labels = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+    const totalDaily = Math.round(issue.totalVotes / days);
+    const timeline = Array.from({ length: days }, (_, i) => {
+        const variance = 0.4 + rng() * 1.2;
+        return {
+            day: `${labels[i % 7]} ${i + 1}/7`,
+            votes: Math.round(totalDaily * variance)
+        };
+    });
+    const peakIdx = timeline.reduce((p, c, i, arr) => (c.votes > arr[p].votes ? i : p), 0);
+
+    return {
+        byAge,
+        byRegion,
+        byGender,
+        byEducation,
+        timeline,
+        engagement: {
+            dailyAverage: totalDaily,
+            peakDay: timeline[peakIdx].day,
+            completionRate: 78 + Math.round(rng() * 18),
+            sharesCount: Math.round(issue.totalVotes * 0.08)
+        }
+    };
+}

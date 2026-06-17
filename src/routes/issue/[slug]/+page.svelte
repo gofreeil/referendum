@@ -1,12 +1,14 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { getIssue, getSideColor, getSideLabel } from '$lib/referendumData';
+    import { getIssue, getSideColor, getSideLabel, getStatistics } from '$lib/referendumData';
 
     let slug = $derived($page.params.slug);
     let issue = $derived(getIssue(slug));
+    let stats = $derived(issue ? getStatistics(issue) : null);
+    let maxTimelineVotes = $derived(stats ? Math.max(...stats.timeline.map((t) => t.votes)) : 1);
 
     let selectedVote = $state<string | null>(null);
-    let activeTab = $state<'sides' | 'experts' | 'results'>('sides');
+    let activeTab = $state<'sides' | 'experts' | 'results' | 'stats'>('sides');
 
     function fmt(n: number) {
         return n.toLocaleString('he-IL');
@@ -85,6 +87,12 @@
             class="px-4 py-3 font-bold text-sm whitespace-nowrap transition-colors {activeTab === 'results' ? 'text-blue-300 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}"
         >
             🗳️ הצבעה ותוצאות
+        </button>
+        <button
+            onclick={() => (activeTab = 'stats')}
+            class="px-4 py-3 font-bold text-sm whitespace-nowrap transition-colors {activeTab === 'stats' ? 'text-blue-300 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}"
+        >
+            📊 סטטיסטיקה והתפלגויות
         </button>
     </div>
 
@@ -307,6 +315,160 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+    {/if}
+
+    <!-- Statistics & Distributions -->
+    {#if activeTab === 'stats' && stats}
+        <section class="space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+                    <div class="text-xs text-gray-400">ממוצע יומי</div>
+                    <div class="text-xl font-black text-blue-300">{fmt(stats.engagement.dailyAverage)}</div>
+                </div>
+                <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+                    <div class="text-xs text-gray-400">יום שיא</div>
+                    <div class="text-xl font-black text-purple-300">{stats.engagement.peakDay}</div>
+                </div>
+                <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+                    <div class="text-xs text-gray-400">השלמת הצבעה</div>
+                    <div class="text-xl font-black text-emerald-300">{stats.engagement.completionRate}%</div>
+                </div>
+                <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+                    <div class="text-xs text-gray-400">שיתופים</div>
+                    <div class="text-xl font-black text-pink-300">{fmt(stats.engagement.sharesCount)}</div>
+                </div>
+            </div>
+
+            <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+                <h3 class="text-lg font-black text-white mb-4">📈 מגמת הצבעה (14 ימים)</h3>
+                <div class="flex items-end gap-1 h-32">
+                    {#each stats.timeline as t}
+                        <div class="flex-1 flex flex-col items-center gap-1 group relative">
+                            <div
+                                class="w-full rounded-t transition-all hover:opacity-100 opacity-80"
+                                style="height:{(t.votes / maxTimelineVotes) * 100}%; background:linear-gradient(to top, #3b82f6, #a78bfa)"
+                                title="{t.day}: {fmt(t.votes)} הצבעות"
+                            ></div>
+                            <div class="text-[9px] text-gray-500 truncate w-full text-center">{t.day.split(' ')[1]}</div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+
+            <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-black text-white">👥 התפלגות לפי גיל</h3>
+                </div>
+                <div class="space-y-3">
+                    {#each stats.byAge as row}
+                        <div>
+                            <div class="flex items-center justify-between text-xs mb-1">
+                                <span class="font-bold text-white">{row.group}</span>
+                                <span class="text-gray-400">{fmt(row.count)}</span>
+                            </div>
+                            <div class="flex h-5 rounded-md overflow-hidden bg-white/5">
+                                {#each row.distribution as d}
+                                    {@const side = issue.sides.find((s) => s.id === d.sideId)}
+                                    <div
+                                        class="flex items-center justify-center text-[10px] font-black text-white/90"
+                                        style="width:{d.pct}%; background:{side?.color}"
+                                    >
+                                        {d.pct >= 10 ? d.pct + '%' : ''}
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+
+            <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+                <h3 class="text-lg font-black text-white mb-4">🗺️ התפלגות אזורית</h3>
+                <div class="space-y-3">
+                    {#each stats.byRegion as row}
+                        <div>
+                            <div class="flex items-center justify-between text-xs mb-1">
+                                <span class="font-bold text-white">{row.region}</span>
+                                <span class="text-gray-400">{fmt(row.count)}</span>
+                            </div>
+                            <div class="flex h-5 rounded-md overflow-hidden bg-white/5">
+                                {#each row.distribution as d}
+                                    {@const side = issue.sides.find((s) => s.id === d.sideId)}
+                                    <div
+                                        class="flex items-center justify-center text-[10px] font-black text-white/90"
+                                        style="width:{d.pct}%; background:{side?.color}"
+                                    >
+                                        {d.pct >= 10 ? d.pct + '%' : ''}
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+                    <h3 class="text-lg font-black text-white mb-4">⚧ התפלגות לפי מגדר</h3>
+                    <div class="space-y-3">
+                        {#each stats.byGender as row}
+                            <div>
+                                <div class="flex items-center justify-between text-xs mb-1">
+                                    <span class="font-bold text-white">{row.gender}</span>
+                                    <span class="text-gray-400">{fmt(row.count)}</span>
+                                </div>
+                                <div class="flex h-5 rounded-md overflow-hidden bg-white/5">
+                                    {#each row.distribution as d}
+                                        {@const side = issue.sides.find((s) => s.id === d.sideId)}
+                                        <div
+                                            class="flex items-center justify-center text-[10px] font-black text-white/90"
+                                            style="width:{d.pct}%; background:{side?.color}"
+                                        >
+                                            {d.pct >= 12 ? d.pct + '%' : ''}
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
+                    <h3 class="text-lg font-black text-white mb-4">🎓 התפלגות לפי השכלה</h3>
+                    <div class="space-y-3">
+                        {#each stats.byEducation as row}
+                            <div>
+                                <div class="flex items-center justify-between text-xs mb-1">
+                                    <span class="font-bold text-white">{row.level}</span>
+                                    <span class="text-gray-400">{fmt(row.count)}</span>
+                                </div>
+                                <div class="flex h-5 rounded-md overflow-hidden bg-white/5">
+                                    {#each row.distribution as d}
+                                        {@const side = issue.sides.find((s) => s.id === d.sideId)}
+                                        <div
+                                            class="flex items-center justify-center text-[10px] font-black text-white/90"
+                                            style="width:{d.pct}%; background:{side?.color}"
+                                        >
+                                            {d.pct >= 12 ? d.pct + '%' : ''}
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-xl bg-blue-500/5 border border-blue-400/20 p-4 flex flex-wrap items-center gap-3">
+                <span class="text-xs uppercase font-bold text-blue-300">מקרא צדדים:</span>
+                {#each issue.sides as side}
+                    <span class="flex items-center gap-1.5 text-xs">
+                        <span class="h-3 w-3 rounded-full" style="background:{side.color}"></span>
+                        <span class="text-white">{side.label}</span>
+                    </span>
+                {/each}
             </div>
         </section>
     {/if}
