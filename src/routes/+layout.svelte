@@ -12,10 +12,16 @@
 </script>
 
 <svelte:head>
-    <title>משאלי העם – הבע דעתך על הסוגיות האקטואליות</title>
+    <title>משאלי העם – הקול שלך נספר</title>
     <meta name="description" content="משאלי העם – הבע דעתך על הסוגיות האקטואליות שעל סדר היום הציבורי" />
-    <link rel="icon" href="/images/referendum.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/images/referendum.png" />
+    <link rel="icon" href="/images/referendum-logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/images/referendum-logo.png" />
+    <meta property="og:title" content="משאלי העם – הקול שלך נספר" />
+    <meta property="og:description" content="פלטפורמת משאלי עם: סוגיות, צוותי מומחים, ניתוח צדדים ותוצאות חיות" />
+    <meta property="og:image" content="/images/referendum-logo.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/images/referendum-logo.png" />
 </svelte:head>
 
 <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>

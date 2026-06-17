@@ -1,8 +1,8 @@
 import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
 register('he', () => Promise.resolve({
-    welcome: "קהילה בשכונה",
-    app_description: "כל יתרונות השכונה תחת קורת גג אחת",
+    welcome: "משאלי העם",
+    app_description: "הקול שלך נספר – דמוקרטיה ישירה לכל אזרח",
     about: "אודות",
     back_home: "חזרה לדף הבית",
     connected: "מחוברים",
@@ -11,8 +11,8 @@ register('he', () => Promise.resolve({
 }));
 
 register('en', () => Promise.resolve({
-    welcome: "Neighborhood Community",
-    app_description: "All neighborhood advantages under one roof",
+    welcome: "People's Referendum",
+    app_description: "Your voice counts – direct democracy for every citizen",
     about: "About",
     back_home: "Back to Home",
     connected: "Connected",
@@ -21,8 +21,8 @@ register('en', () => Promise.resolve({
 }));
 
 register('ru', () => Promise.resolve({
-    welcome: "Сообщество района",
-    app_description: "Все преимущества района под одной крышей",
+    welcome: "Народный референдум",
+    app_description: "Ваш голос важен – прямая демократия для каждого",
     about: "О проекте",
     back_home: "Вернуться домой",
     connected: "Подключено",
