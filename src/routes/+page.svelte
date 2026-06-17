@@ -11,10 +11,6 @@
 </script>
 
 <section class="flex flex-col items-center text-center gap-6 py-10 px-4">
-    <div class="inline-flex items-center gap-2 rounded-full bg-blue-500/10 border border-blue-400/30 px-4 py-1.5 text-sm text-blue-200">
-        <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-        פלטפורמת משאלי עם – דמוקרטיה ישירה לכל אזרח
-    </div>
     <h1 class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-5xl md:text-7xl font-black text-transparent leading-tight">
         משאלי העם
     </h1>
