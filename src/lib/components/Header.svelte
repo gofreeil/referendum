@@ -113,9 +113,6 @@
                             >
                                 {tFn("welcome")}
                             </h1>
-                            <p class="text-xs text-gray-400 leading-tight truncate">
-                                {tFn("app_description")}
-                            </p>
                         </div>
                     </a>
 
@@ -194,7 +191,6 @@
                     >
                         {tFn("welcome")}
                     </h1>
-                    <p class="text-lg text-gray-100 font-extrabold group-hover:opacity-80 transition-opacity">{tFn("app_description")}</p>
                 </a>
             </div>
             <div class="flex items-center gap-2">
