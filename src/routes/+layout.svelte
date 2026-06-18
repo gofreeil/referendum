@@ -65,7 +65,6 @@
         border-radius: 1rem;
         overflow: hidden;
         border: 1px solid rgba(96, 165, 250, 0.25);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
     }
     .hero-banner img {
         width: 100%;
