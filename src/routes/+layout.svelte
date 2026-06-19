@@ -34,7 +34,10 @@
         <RightAdBanner />
         <main id="main-content" tabindex="-1" class="main-content">
             <div class="hero-banner">
-                <img src="/images/hero-banner.png" alt="כנסת ישראל, דגל המדינה ומאזני הצדק" />
+                <div class="hero-banner-img-wrap">
+                    <img src="/images/hero-banner.png" alt="כנסת ישראל, דגל המדינה ומאזני הצדק" />
+                </div>
+                <img class="hero-logo" src="/images/referendum-logo.png" alt="משאלי העם" />
             </div>
             {@render children()}
         </main>
@@ -60,17 +63,30 @@
     }
 
     .hero-banner {
+        position: relative;
         width: 100%;
-        margin-top: 52px;
+        margin-top: 37px;
         margin-bottom: 1.5rem;
+    }
+    .hero-banner-img-wrap {
         border-radius: 1rem;
         overflow: hidden;
         border: 1px solid rgba(96, 165, 250, 0.25);
     }
-    .hero-banner img {
+    .hero-banner-img-wrap > img {
         width: 100%;
         height: auto;
         display: block;
+    }
+    .hero-logo {
+        position: absolute;
+        top: 100%;
+        right: 0.5rem;
+        transform: translateY(-66.67%);
+        width: clamp(110px, 18vw, 210px);
+        height: auto;
+        z-index: 2;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
     }
 
     @media (max-width: 1024px) {
