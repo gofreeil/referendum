@@ -82,16 +82,6 @@ export const ads: Ad[] = [
         footerText: 'הצטרף לקבוצת הרכישה שלנו והוזל מיד את ההוצאות!',
     },
     {
-        title: 'מועדון המשקיעים החברתי',
-        summary: 'התחבר עם קבוצת המשקיעים',
-        url: 'https://www.melecshop.com/page/free',
-        color: 'from-amber-600 to-orange-600',
-        image: '/images/partners/investments.png',
-        hoverTitle: 'מועדון המשקיעים החברתי',
-        hoverText: 'התחבר עם קבוצת המשקיעים שלנו',
-        footerText: 'התחבר עם קבוצת המשקיעים שלנו',
-    },
-    {
         title: 'בעלי מקצוע כשירים',
         summary: 'מחפש בעל מקצוע איכותי?',
         url: 'https://index-chi-sage.vercel.app/',
@@ -109,7 +99,7 @@ export const ads: Ad[] = [
         image: '/images/community-neighborhood.png',
         hoverTitle: 'קהילה בשכונה',
         hoverText: 'כל יתרונות השכונה תחת קורת גג אחת',
-        footerText: 'תהנה מכל היתרונות של השכונה שלך',
+        footerText: 'תהנה מכל היתרונות של הקהילה בשכונה שלך',
         extraClass: 'ring-1 ring-purple-500/40',
     },
     {
