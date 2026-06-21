@@ -200,7 +200,7 @@
             <div class="flex items-center gap-2">
                 <!-- כפתור אודות -->
                 <a
-                    href="https://my-new-project.vercel.app/about/revenue"
+                    href="https://chachmim.gofreeil.com/about/revenue"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="relative flex items-center rounded-lg px-4 py-2 font-bold text-white transition-all duration-300 hover:scale-105 hover:tracking-wide"

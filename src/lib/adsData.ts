@@ -22,7 +22,7 @@ export const ads: Ad[] = [
     {
         title: 'בתי הפיוס',
         summary: 'יש לך סיכסוך? לחץ לפתרון',
-        url: 'https://chachmim.vercel.app/',
+        url: 'https://chachmim.gofreeil.com/',
         color: 'from-orange-600 to-red-600',
         image: '/images/bati-hapius.png',
         hoverTitle: 'בתי הפיוס',
@@ -32,7 +32,7 @@ export const ads: Ad[] = [
     {
         title: 'הגמ"ח הארצי',
         summary: 'כל הגמחים תחת קורת גג אחת',
-        url: 'https://national-gemach.vercel.app/',
+        url: 'https://gemach.gofreeil.com/',
         color: 'from-pink-600 via-fuchsia-600 to-purple-700',
         image: '/images/gemach-harzi.png',
         hoverTitle: 'הגמ"ח הארצי',
@@ -42,7 +42,7 @@ export const ads: Ad[] = [
     {
         title: 'ועדי שכונות',
         summary: 'הצטרף לוועד השכונה שלך',
-        url: 'https://neighborhoods-il.vercel.app/',
+        url: 'https://neighborhoods.gofreeil.com/',
         color: 'from-blue-600 to-cyan-600',
         image: '/images/news/vaadei-shchunot.png',
         hoverTitle: 'ועדי שכונות',
@@ -52,7 +52,7 @@ export const ads: Ad[] = [
     {
         title: 'מבקר רשויות המדינה',
         summary: 'מבקרים את הרשויות',
-        url: 'https://criticism.vercel.app/',
+        url: 'https://criticism.gofreeil.com/',
         color: 'from-blue-700 to-indigo-700',
         image: '/images/mevaker-rashuyot.png',
         hoverTitle: 'מבקר רשויות המדינה',
@@ -63,7 +63,7 @@ export const ads: Ad[] = [
     {
         title: 'דירוג ציבורי',
         summary: 'העם מדרג את הרשויות',
-        url: 'https://public-rating-il.vercel.app/',
+        url: 'https://rating.gofreeil.com/',
         color: 'from-indigo-600 to-blue-600',
         image: '/images/public-rating.jpeg',
         hoverTitle: 'דירוג ציבורי',
@@ -74,7 +74,7 @@ export const ads: Ad[] = [
     {
         title: 'קבוצת רכישה',
         summary: 'הוזל את ההוצאות החודשיות',
-        url: 'https://purchasing-groups.vercel.app/',
+        url: 'https://groups.gofreeil.com/',
         color: 'from-green-800 to-emerald-900',
         image: '/images/whatsapp_cta.png',
         hoverTitle: 'קבוצת רכישה',
@@ -84,7 +84,7 @@ export const ads: Ad[] = [
     {
         title: 'בעלי מקצוע כשירים',
         summary: 'מחפש בעל מקצוע איכותי?',
-        url: 'https://index-chi-sage.vercel.app/',
+        url: 'https://index.gofreeil.com/',
         color: 'from-yellow-500 to-orange-500',
         image: '/images/professionals.png',
         hoverTitle: 'בעלי מקצוע כשירים',
@@ -94,7 +94,7 @@ export const ads: Ad[] = [
     {
         title: 'קהילה בשכונה',
         summary: 'כל יתרונות השכונה תחת קורת גג אחת',
-        url: 'https://my-new-project.vercel.app/',
+        url: 'https://community.gofreeil.com/',
         color: 'from-blue-600 to-purple-700',
         image: '/images/community-neighborhood.png',
         hoverTitle: 'קהילה בשכונה',
@@ -105,7 +105,7 @@ export const ads: Ad[] = [
     {
         title: 'החנות החברתית',
         summary: 'כנסו לחנות לחיים טובים יותר',
-        url: 'https://heirut-shop.vercel.app/',
+        url: 'https://shop.gofreeil.com/',
         color: 'from-emerald-600 to-teal-700',
         image: '/images/freedom-store.png',
         hoverTitle: 'החנות החברתית',
