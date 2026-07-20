@@ -60,7 +60,7 @@
 		tabSwipeHandled = false;
 		tabAxis = null;
 		isDraggingH = false;
-		dragStartLeftPx = open ? 0 : -DRAWER_WIDTH;
+		dragStartLeftPx = open ? 0 : -(drawerSystemEl?.offsetWidth ?? DRAWER_WIDTH);
 	}
 
 	function onTabTouchMove(e: TouchEvent) {
@@ -78,9 +78,10 @@
 
 		if (tabAxis === 'h' && drawerSystemEl) {
 			isDraggingH = true;
+			const w = drawerSystemEl.offsetWidth || DRAWER_WIDTH;
 			let newLeft = dragStartLeftPx + dx;
 			if (newLeft > 0) newLeft = 0;
-			if (newLeft < -DRAWER_WIDTH - 20) newLeft = -DRAWER_WIDTH - 20;
+			if (newLeft < -w - 20) newLeft = -w - 20;
 			drawerSystemEl.style.transition = 'none';
 			drawerSystemEl.style.left = newLeft + 'px';
 
@@ -202,27 +203,27 @@
 		</div>
 
 		<!-- רשימת פרסומות -->
-		<div class="ads-list">
+		<div class="benefits-list">
 			{#each ads as ad, i (i)}
 				<a
 					href={ad.url}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="ad-card"
+					class="benefit-card"
 					onclick={closeAll}
 				>
-					<div class="ad-img-wrap">
+					<div class="benefit-img-wrap">
 						<img
 							src={ad.image}
 							alt={ad.title}
-							class="ad-img"
+							class="benefit-img"
 							decoding="async"
 						/>
 					</div>
-					<div class="ad-body">
-						<p class="ad-title">{ad.title}</p>
-						<p class="ad-desc">{ad.summary}</p>
-						<span class="ad-cta" title={ad.hoverText ?? undefined}
+					<div class="benefit-body">
+						<p class="benefit-title">{ad.title}</p>
+						<p class="benefit-desc">{ad.summary}</p>
+						<span class="benefit-cta" title={ad.hoverText ?? undefined}
 							>← {ad.footerText ?? ad.summary}</span
 						>
 					</div>
@@ -232,12 +233,11 @@
 	</div>
 
 	<!-- לשונית מחוברת לקצה הימני של הבאנר -->
-	{#if tabY > 0}
 		<button
 			class="tab"
 			class:tab-dragging={tabDragging}
 			class:tab-collapsed={collapsed && !open}
-			style="top: {tabY}px; transform: translateY(-50%);"
+			style="top: {tabY > 0 ? `${tabY}px` : '80%'}; transform: translateY(-50%);"
 			onclick={onTabClick}
 			use:nonPassiveTouch
 			aria-label="פתח הטבות מהקהילה"
@@ -246,7 +246,6 @@
 				<span class="tab-text">הטבות מהקהילה</span>
 			{/if}
 		</button>
-	{/if}
 
 	</div>
 </div>
@@ -278,7 +277,11 @@
 	.drawer-system {
 		position: fixed;
 		top: 0;
-		left: -340px;
+		left: -340px; /* fallback לדפדפנים בלי min() */
+		/* במסכים צרים (הגדלת תצוגה במכשיר) הרוחב מוגבל ל-92vw; ההיסט חייב
+		   להתאים לרוחב בפועל — אחרת הלשונית גולשת אל מחוץ למסך משמאל */
+		left: calc(-1 * min(340px, 92vw));
+		height: 100vh; /* fallback לדפדפנים בלי תמיכה ב-dvh */
 		height: 100dvh;
 		width: 340px;
 		max-width: 92vw;
@@ -360,7 +363,7 @@
 	}
 
 	/* ---- רשימת פרסומות ---- */
-	.ads-list {
+	.benefits-list {
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
 		flex: 1;
@@ -374,7 +377,7 @@
 	}
 
 	/* ---- כרטיס פרסומת ---- */
-	.ad-card {
+	.benefit-card {
 		display: flex;
 		gap: 0.75rem;
 		background: rgba(255, 255, 255, 0.05);
@@ -386,13 +389,13 @@
 		align-items: stretch;
 	}
 
-	.ad-card:hover {
+	.benefit-card:hover {
 		background: rgba(99, 102, 241, 0.12);
 		border-color: rgba(99, 102, 241, 0.35);
 		transform: scale(1.01);
 	}
 
-	.ad-img-wrap {
+	.benefit-img-wrap {
 		position: relative;
 		width: 88px;
 		min-height: 88px;
@@ -403,7 +406,7 @@
 		border: 2px solid #facc15;
 	}
 
-	.ad-img {
+	.benefit-img {
 		position: absolute;
 		inset: 0;
 		width: 100%;
@@ -411,12 +414,12 @@
 		object-fit: cover;
 	}
 
-	.ad-body {
+	.benefit-body {
 		flex: 1;
 		min-width: 0;
 	}
 
-	.ad-title {
+	.benefit-title {
 		font-size: 0.9rem;
 		font-weight: 700;
 		color: #f1f5f9;
@@ -426,7 +429,7 @@
 		word-break: break-word;
 	}
 
-	.ad-desc {
+	.benefit-desc {
 		font-size: 0.75rem;
 		color: #94a3b8;
 		margin: 0 0 0.3rem;
@@ -438,7 +441,7 @@
 		line-height: 1.4;
 	}
 
-	.ad-cta {
+	.benefit-cta {
 		display: inline-block;
 		font-size: 0.7rem;
 		color: #a5b4fc;
