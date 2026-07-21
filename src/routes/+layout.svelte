@@ -7,6 +7,7 @@
     import AdsSidebar from '$lib/components/AdsSidebar.svelte';
     import RightAdBanner from '$lib/components/RightAdBanner.svelte';
     import MobileAdsDrawer from '$lib/components/MobileAdsDrawer.svelte';
+    import WelcomeScreen from '$lib/components/WelcomeScreen.svelte';
 
     let { children, data } = $props();
 </script>
@@ -25,6 +26,10 @@
 </svelte:head>
 
 <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+<!-- מסך פתיחה אחרי הרשמה / זיהוי ראשון — גלובלי, מופעל ע"י ?welcome ב-URL -->
+<WelcomeScreen />
+
 <MobileAdsDrawer />
 
 <div class="min-h-screen flex flex-col bg-[#0f172a]">
