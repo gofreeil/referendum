@@ -2,7 +2,7 @@
     import { page } from '$app/stores';
     import { getIssue, getSideColor, getSideLabel, getStatistics } from '$lib/referendumData';
 
-    let slug = $derived($page.params.slug);
+    let slug = $derived($page.params.slug ?? '');
     let issue = $derived(getIssue(slug));
     let stats = $derived(issue ? getStatistics(issue) : null);
     let maxTimelineVotes = $derived(stats ? Math.max(...stats.timeline.map((t) => t.votes)) : 1);
