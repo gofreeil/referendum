@@ -12,6 +12,11 @@ export interface StrapiUser {
 	displayName?: string;
 	firstname?: string;
 	lastname?: string;
+	// תפקיד ניהולי משותף לכל האתרים (idx_admin, ch_admin, ref_admin, super_admin…)
+	app_role?: string;
+	nickname?: string;
+	registered_site?: string;
+	createdAt?: string;
 }
 
 /**
