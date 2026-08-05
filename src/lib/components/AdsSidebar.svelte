@@ -1,9 +1,14 @@
 <script lang="ts">
     import { ads } from '$lib/adsData';
+
+    // נעילה מכוונת: הטור השמאלי מחזיק אך ורק אתרי "יוצאים לחירות".
+    // פרסומות בתשלום שייכות לטור הימני בלבד - ניסיון להעביר לכאן
+    // approvedAds ייכשל ב-npm run check במקום להיבלע בשקט.
+    let {}: { approvedAds?: never } = $props();
 </script>
 
 <aside
-    aria-label="פרסומות ושותפים"
+    aria-label="אתרי יוצאים לחירות"
     class="hidden lg:block w-48 flex-shrink-0 relative h-fit pb-8 text-center"
 >
     <h4
