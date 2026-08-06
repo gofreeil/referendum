@@ -1,115 +1,113 @@
 // ============================================================
-// adsData.ts - נתוני פרסומות משותפים לנייד ודסקטופ
+// adsData.ts - טור אתרי הרשת של "יוצאים לחירות" (דסקטופ + מגירת הנייד)
+// עדכן כאן בלבד - יתעדכן אוטומטית בכל המקומות.
+// זהה לרשימה באתר קהילה בשכונה, למעט החלפת המודעה העצמית
+// (משאלי העם) במודעה של קהילה בשכונה.
 // ============================================================
 
 export interface Ad {
+    id: number;
     title: string;
-    summary: string;
-    url: string;
+    description: string;
+    cta: string;
+    href: string;
+    image: string;
     color: string;
-    image?: string;
-    bgStyle?: string;
-    hoverTitle?: string;
-    hoverText?: string;
-    footerText?: string;
-    extraClass?: string;
-    comingSoon?: boolean;
-    imageStyle?: string;
-    imageContain?: boolean;
+    imageHeight?: string;   // גובה מותאם לתמונה (ברירת מחדל: 160px)
+    imageScale?: number;    // זום יחסית ל-cover (1 = מילוי המשבצת; מעל 1 = תקריב)
+    hover?: string;         // טקסט tooltip בריחוף מעל כפתור ה-CTA
 }
 
 export const ads: Ad[] = [
     {
-        title: 'בתי הפיוס',
-        summary: 'יש לך סיכסוך? לחץ לפתרון',
-        url: 'https://chachmim.gofreeil.com/',
-        color: 'from-orange-600 to-red-600',
-        image: '/images/bati-hapius.png',
-        hoverTitle: 'בתי הפיוס',
-        hoverText: 'מתנדבים לתת לך עזרה מלאה בדין / פיוס בכל סיכסוך',
-        footerText: 'יש לך סיכסוך? לחץ לפתרון',
+        id: 1,
+        title: "בתי הפיוס",
+        description: "מתנדבים לתת לך עזרה מלאה בדין / פיוס בכל סיכסוך",
+        cta: "יש לך סיכסוך? לחץ לפתרון",
+        href: "https://chachmim.gofreeil.com/",
+        image: "/images/bati-hapius.webp",
+        color: "from-orange-600 to-red-600"
     },
     {
+        id: 9,
         title: 'הגמ"ח הארצי',
-        summary: 'כל הגמחים תחת קורת גג אחת',
-        url: 'https://gemach.gofreeil.com/',
-        color: 'from-pink-600 via-fuchsia-600 to-purple-700',
-        image: '/images/gemach-harzi.png',
-        hoverTitle: 'הגמ"ח הארצי',
-        hoverText: 'מצא כל גמח בקלות!',
-        footerText: 'לאתר הגמ"ח הארצי',
+        description: 'כל הגמחים תחת קורת גג אחת',
+        cta: 'לאתר הגמ"ח הארצי',
+        hover: 'מצא כל גמח בקלות!',
+        href: "https://gemach.gofreeil.com/",
+        image: "/images/gemach-harzi.webp",
+        color: "from-pink-600 via-fuchsia-600 to-purple-700",
     },
     {
-        title: 'ועדי שכונות',
-        summary: 'הצטרף לוועד השכונה שלך',
-        url: 'https://neighborhoods.gofreeil.com/',
-        color: 'from-blue-600 to-cyan-600',
-        image: '/images/news/vaadei-shchunot.png',
-        hoverTitle: 'ועדי שכונות',
-        hoverText: 'מהפכת משילות העם על המוסדות',
-        footerText: 'הכר והשתתף במהפכת משילות העם על מוסדותיו',
+        id: 2,
+        title: "ועדי שכונות",
+        description: "מהפכת משילות העם על המוסדות",
+        cta: "הכר והשתתף במהפכת משילות העם על מוסדותיו",
+        href: "https://neighborhoods.gofreeil.com/",
+        image: "/images/news/vaadei-shchunot.webp",
+        color: "from-blue-600 to-cyan-600",
+        imageHeight: "110px"
     },
     {
-        title: 'מבקר רשויות המדינה',
-        summary: 'מבקרים את הרשויות',
-        url: 'https://criticism.gofreeil.com/',
-        color: 'from-blue-700 to-indigo-700',
-        image: '/images/mevaker-rashuyot.png',
-        hoverTitle: 'מבקר רשויות המדינה',
-        hoverText: 'מבקרים את הרשויות, ממצים את זכות התושב',
-        footerText: 'מבקרים את הרשויות, ממצים את זכות התושב',
-        imageStyle: 'height: 120px',
+        id: 5,
+        title: "מבקר רשויות המדינה",
+        description: "מבקרים את הרשויות, ממצים את זכות התושב",
+        cta: "מבקרים את הרשויות, ממצים את זכות התושב",
+        href: "https://criticism.gofreeil.com/",
+        image: "/images/mevaker-rashuyot.webp",
+        color: "from-blue-700 to-indigo-700",
+        imageHeight: "120px",
+        imageScale: 1.2,
     },
     {
-        title: 'דירוג ציבורי',
-        summary: 'העם מדרג את הרשויות',
-        url: 'https://rating.gofreeil.com/',
-        color: 'from-indigo-600 to-blue-600',
-        image: '/images/public-rating.jpeg',
-        hoverTitle: 'דירוג ציבורי',
-        hoverText: 'העם מדרג את הרשויות ועובדי הציבור',
-        footerText: 'העם מדרג את הרשויות ועובדי הציבור',
-        imageStyle: 'height: 200px',
+        id: 10,
+        title: "דירוג ציבורי",
+        description: "העם מדרג את הרשויות ועובדי הציבור",
+        cta: "העם מדרג את הרשויות ועובדי הציבור",
+        href: "https://rating.gofreeil.com/",
+        image: "/images/public-rating.webp",
+        color: "from-indigo-600 to-blue-600",
+        imageHeight: "110px",
+        imageScale: 0.9,
     },
     {
-        title: 'קבוצת רכישה',
-        summary: 'הוזל את ההוצאות החודשיות',
-        url: 'https://groups.gofreeil.com/',
-        color: 'from-green-800 to-emerald-900',
-        image: '/images/whatsapp_cta.png',
-        hoverTitle: 'קבוצת רכישה',
-        hoverText: 'הוזל את ההוצאות שלך',
-        footerText: 'הצטרף לקבוצת הרכישה שלנו והוזל מיד את ההוצאות!',
-    },
-    {
-        title: 'בעלי מקצוע כשירים',
-        summary: 'מחפש בעל מקצוע איכותי?',
-        url: 'https://index.gofreeil.com/',
-        color: 'from-yellow-500 to-orange-500',
-        image: '/images/professionals.png',
-        hoverTitle: 'בעלי מקצוע כשירים',
-        hoverText: 'חתמו על תנאי הקהילה ונותנים לנו הנחות והטבות יחודיות',
-        footerText: 'מחפש בעל מקצוע איכותי באזורך?',
-    },
-    {
+        id: 8,
         title: 'קהילה בשכונה',
-        summary: 'כל יתרונות השכונה תחת קורת גג אחת',
-        url: 'https://community.gofreeil.com/',
-        color: 'from-blue-600 to-purple-700',
-        image: '/images/community-neighborhood.png',
-        hoverTitle: 'קהילה בשכונה',
-        hoverText: 'כל יתרונות השכונה תחת קורת גג אחת',
-        footerText: 'תהנה מכל היתרונות של הקהילה בשכונה שלך',
-        extraClass: 'ring-1 ring-purple-500/40',
+        description: 'כל יתרונות השכונה תחת קורת גג אחת',
+        cta: 'לאתר קהילה בשכונה',
+        hover: 'כל היתרונות בשכונה שלך!',
+        href: "https://community.gofreeil.com/",
+        image: "/images/community-neighborhood.png",
+        color: "from-blue-500 to-purple-600",
     },
     {
-        title: 'החנות החברתית',
-        summary: 'כנסו לחנות לחיים טובים יותר',
-        url: 'https://shop.gofreeil.com/',
-        color: 'from-emerald-600 to-teal-700',
-        image: '/images/freedom-store.png',
-        hoverTitle: 'החנות החברתית',
-        hoverText: 'מוצרים נבחרים לבריאות, חקלאות, טכנולוגיה ועוד',
-        footerText: 'לחנות שלנו',
+        id: 3,
+        title: "קבוצת רכישה",
+        description: "הוזל את ההוצאות שלך",
+        cta: "הצטרף לקבוצת הרכישה שלנו והוזל מיד את ההוצאות!",
+        href: "https://groups.gofreeil.com/",
+        image: "/images/whatsapp_cta.webp",
+        color: "from-green-800 to-emerald-900"
     },
+    {
+        id: 6,
+        title: "בעלי מקצוע כשירים",
+        description: "חתמו על תנאי הקהילה ונותנים לנו הנחות והטבות יחודיות",
+        cta: "מחפש בעל מקצוע איכותי באזורך?",
+        href: "https://index.gofreeil.com/",
+        image: "/images/professionals.webp",
+        color: "from-yellow-500 to-orange-500",
+        imageHeight: "110px"
+    },
+    {
+        id: 7,
+        title: "חנות החירות",
+        description: "מוצרים נבחרים לבריאות טבעית, חקלאות ביתית, טכנולוגיה ועוד",
+        cta: "כנסו לחנות לחיים טובים יותר",
+        hover: "החנות שלנו!",
+        href: "https://shop.gofreeil.com/",
+        image: "/images/shop.webp",
+        color: "from-emerald-600 to-teal-700",
+        imageHeight: "110px"
+    }
 ];

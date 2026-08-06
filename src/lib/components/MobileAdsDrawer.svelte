@@ -204,9 +204,9 @@
 
 		<!-- רשימת פרסומות -->
 		<div class="benefits-list">
-			{#each ads as ad, i (i)}
+			{#each ads as ad (ad.id)}
 				<a
-					href={ad.url}
+					href={ad.href}
 					target="_blank"
 					rel="noopener noreferrer"
 					class="benefit-card"
@@ -218,13 +218,14 @@
 							alt={ad.title}
 							class="benefit-img"
 							decoding="async"
+							style={ad.imageScale ? `transform: scale(${ad.imageScale});` : ''}
 						/>
 					</div>
 					<div class="benefit-body">
 						<p class="benefit-title">{ad.title}</p>
-						<p class="benefit-desc">{ad.summary}</p>
-						<span class="benefit-cta" title={ad.hoverText ?? undefined}
-							>← {ad.footerText ?? ad.summary}</span
+						<p class="benefit-desc">{ad.description}</p>
+						<span class="benefit-cta" title={ad.hover ?? undefined}
+							>← {ad.cta}</span
 						>
 					</div>
 				</a>
