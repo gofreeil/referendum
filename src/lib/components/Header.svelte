@@ -208,13 +208,13 @@
                         class="flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-sm font-bold text-white transition-colors"
                         title="האזור האישי שלי"
                     >
-                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-pink-600 text-xs">👤</span>
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full login-grad text-xs">👤</span>
                         <span class="hidden sm:inline max-w-[120px] truncate">{user.name || user.email}</span>
                     </a>
                 {:else}
                     <a
                         href="/login?redirect=/profile"
-                        class="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-pink-600 hover:from-amber-400 hover:to-pink-500 px-3 py-2 text-sm font-bold text-white transition-all"
+                        class="flex items-center gap-1.5 rounded-lg login-grad hover:brightness-110 px-3 py-2 text-sm font-bold text-white transition-all"
                     >
                         <span>🕊️</span>
                         <span class="hidden sm:inline">התחברות</span>
