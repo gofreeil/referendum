@@ -38,6 +38,12 @@
 			<p class="mt-1 text-sm text-gray-400">מחובר: {data.user.name} · {data.user.email}</p>
 		</div>
 		<div class="flex flex-shrink-0 items-center gap-3">
+			<a
+				href="/admin/ads"
+				class="rounded-full border border-purple-500/40 bg-purple-500/10 px-4 py-2 text-sm font-bold text-purple-300 transition hover:bg-purple-500/20"
+			>
+				📢 ניהול פרסומות
+			</a>
 			{#if data.superAdmin}
 				<a
 					href="/admin/admins"

@@ -16,6 +16,9 @@ export interface Ad {
     imageHeight?: string;   // גובה מותאם לתמונה (ברירת מחדל: 160px)
     imageScale?: number;    // זום יחסית ל-cover (1 = מילוי המשבצת; מעל 1 = תקריב)
     hover?: string;         // טקסט tooltip בריחוף מעל כפתור ה-CTA
+    gradientCss?: string;   // רקע כמחרוזת CSS מלאה (מודעות מהבילדר) — גובר על color
+    /** מזהה המודעה ב-Strapi (רק למודעות מהבילדר) — למדידה בדשבורד המפרסם */
+    adId?: string;
 }
 
 export const ads: Ad[] = [

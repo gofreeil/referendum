@@ -226,6 +226,21 @@ body {
     color: #3730a3 !important;
 }
 
+/* ── דפי הפרסום (advertise / manage) שנקלטו מהרשת — רקעי הפאנלים
+   הכהים שלהם ממופים לקרם, באותו מנגנון של שאר האתר. הבילדר, דף
+   הנחיתה של פרסומת ומסך /admin/ads מעוצבים ב-style scoped עצמאי
+   (כהה ועקבי בתוך עצמו) ולא נוגעים בהם. ── */
+.bg-\[\#0f1626\] { background-color: var(--bg-cream-card) !important; }
+.bg-\[\#0b1120\] { background-color: var(--bg-cream) !important; }
+.bg-\[\#172136\] { background-color: var(--bg-cream-soft) !important; }
+.bg-\[\#16203a\] { background-color: var(--bg-cream-soft) !important; }
+.bg-\[\#223252\] { background-color: var(--bg-cream-darker) !important; }
+.hover\:bg-\[\#16203a\]:hover { background-color: var(--bg-cream-darker) !important; }
+.hover\:bg-\[\#223252\]:hover { background-color: var(--border-soft) !important; }
+.border-\[\#2c3a55\] { border-color: var(--border-soft) !important; }
+.border-\[\#40527a\] { border-color: var(--border-soft) !important; }
+.hover\:border-\[\#40527a\]:hover { border-color: #b89d5a !important; }
+
 /* native <option> */
 select option, select optgroup {
     background-color: #ffffff;

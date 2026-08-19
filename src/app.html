@@ -12,6 +12,9 @@
 			gtag('js', new Date());
 			gtag('config', 'G-YTEG7S0H9N');
 		</script>
+		<!-- המודעות נטענות בצד-הלקוח (adSlots.ts); ה-preload משגר את הבקשה
+		     מוקדם ככל האפשר, עוד לפני שה-JS נטען. -->
+		<link rel="preload" href="/api/ads/approved" as="fetch" crossorigin="anonymous" />
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

@@ -7,6 +7,7 @@
     import AdsSidebar from '$lib/components/AdsSidebar.svelte';
     import RightAdBanner from '$lib/components/RightAdBanner.svelte';
     import MobileAdsDrawer from '$lib/components/MobileAdsDrawer.svelte';
+    import AdInterstitial from '$lib/components/AdInterstitial.svelte';
     import WelcomeScreen from '$lib/components/WelcomeScreen.svelte';
 
     let { children, data } = $props();
@@ -51,6 +52,9 @@
 
     <Footer />
 </div>
+
+<!-- פרסומת-הביניים (נייד) — שכבה גלובלית; נפתחת רק דרך adGate -->
+<AdInterstitial />
 
 <style>
     .layout-container {
