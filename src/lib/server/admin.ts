@@ -141,17 +141,79 @@ const SCAN_PAGE_SIZE = 1000; // maxLimit של השרת
 const MAX_SCAN = 5000; // תקרת רשומות לסריקה המקומית
 const MAX_RESULTS = 10;
 
+// ── התאמה עמומה (שגיאות כתיב) ──
+
+/** מרחק לוינשטיין קלאסי, שתי שורות בלבד */
+function levenshtein(a: string, b: string): number {
+	if (a === b) return 0;
+	if (!a.length) return b.length;
+	if (!b.length) return a.length;
+	let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+	for (let i = 1; i <= a.length; i++) {
+		const cur = [i];
+		for (let j = 1; j <= b.length; j++) {
+			cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+		}
+		prev = cur;
+	}
+	return prev[b.length];
+}
+
+/** כמה שגיאות כתיב מרשים לפי אורך החיפוש */
+function typoBudget(len: number): number {
+	if (len <= 4) return 1;
+	if (len <= 7) return 2;
+	return 3;
+}
+
+/**
+ * המרחק העמום המינימלי בין החיפוש לרשומה: מושווה מול כל ערכי הטקסט,
+ * מול החלק שלפני ה-@ במיילים, מול פיצול למילים, ומול קידומת באורך
+ * החיפוש (כדי שגם הקלדה חלקית עם טעות תיתפס).
+ */
+function fuzzyDistance(u: Record<string, unknown>, q: string): number {
+	const budget = typoBudget(q.length);
+	let best = Infinity;
+	for (const raw of Object.values(u)) {
+		if (typeof raw !== 'string' || !raw) continue;
+		const v = raw.toLowerCase();
+		const candidates = new Set<string>([v]);
+		if (v.includes('@')) candidates.add(v.split('@')[0]);
+		for (const tok of v.split(/[@._\-\s]+/)) if (tok.length >= 2) candidates.add(tok);
+		for (const c of candidates) {
+			// גם מול הערך המלא וגם מול קידומת באורך החיפוש
+			const d = Math.min(
+				levenshtein(q, c),
+				c.length > q.length ? levenshtein(q, c.slice(0, q.length)) : Infinity,
+				c.length > q.length + 1 ? levenshtein(q, c.slice(0, q.length + 1)) : Infinity
+			);
+			if (d < best) best = d;
+			if (best === 0) return 0;
+		}
+	}
+	return best <= budget ? best : Infinity;
+}
+
+export interface DeepSearchResult {
+	users: SlimUser[];
+	/** true כשאין אף התאמה מדויקת והתוצאות הן "דומים" (שגיאת כתיב) */
+	fuzzy: boolean;
+}
+
 /**
  * חיפוש משתמשים לחיפוש החי: קודם השאילתה המסוננת של Strapi
  * (email/username/nickname); אם היא נכשלה או לא מצאה — סריקה מקומית של כל
  * שדות הטקסט ברשומות, בדפדוף מוגבל. תופסת גם שמות בעברית ושדות לא-סטנדרטיים.
+ * אין התאמה מדויקת בכלל? — מוחזרים הדומים ביותר (מרחק לוינשטיין) עם דגל
+ * fuzzy, כדי ששגיאת כתיב ("ahuvhnd1") עדיין תציע את ("ahuvahnd1@gmail.com").
  */
-export async function searchUsersDeep(q: string): Promise<SlimUser[]> {
+export async function searchUsersDeep(q: string): Promise<DeepSearchResult> {
 	const filtered = await searchUsers(q).catch(() => [] as SlimUser[]);
-	if (filtered.length > 0) return filtered.slice(0, MAX_RESULTS);
+	if (filtered.length > 0) return { users: filtered.slice(0, MAX_RESULTS), fuzzy: false };
 
 	const needle = q.toLowerCase();
 	const matches: SlimUser[] = [];
+	const fuzzyHits: { u: Record<string, unknown>; d: number }[] = [];
 	for (let start = 0; start < MAX_SCAN; start += SCAN_PAGE_SIZE) {
 		const arr = await api(
 			`/api/users?pagination[start]=${start}&pagination[limit]=${SCAN_PAGE_SIZE}`
@@ -161,12 +223,27 @@ export async function searchUsersDeep(q: string): Promise<SlimUser[]> {
 			const hit = Object.values(u).some(
 				(v) => typeof v === 'string' && v.toLowerCase().includes(needle)
 			);
-			if (hit) matches.push(toSlim(u));
+			if (hit) {
+				matches.push(toSlim(u));
+			} else {
+				const d = fuzzyDistance(u, needle);
+				if (d !== Infinity) fuzzyHits.push({ u, d });
+			}
 			if (matches.length >= MAX_RESULTS) break;
 		}
 		if (batch.length < SCAN_PAGE_SIZE || matches.length >= MAX_RESULTS) break;
 	}
-	return matches;
+	// אין התאמה מדויקת — מציעים את הדומים ביותר, לפי מרחק עולה
+	if (matches.length === 0 && fuzzyHits.length > 0) {
+		return {
+			users: fuzzyHits
+				.sort((a, b) => a.d - b.d)
+				.slice(0, MAX_RESULTS)
+				.map((h) => toSlim(h.u)),
+			fuzzy: true
+		};
+	}
+	return { users: matches, fuzzy: false };
 }
 
 /** משתמש בודד (רזה) לבדיקות הגנה לפני שינוי תפקיד */

@@ -49,6 +49,7 @@
 		registered_site?: string;
 	}
 	let liveResults: LiveUser[] | null = $state(null);
+	let liveFuzzy = $state(false); // התוצאות הן "דומים" (שגיאת כתיב) ולא התאמה מדויקת
 	let searching = $state(false);
 	let searchSeq = 0;
 	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
@@ -59,6 +60,7 @@
 		if (term.length < 2) {
 			searching = false;
 			liveResults = null;
+			liveFuzzy = false;
 			return;
 		}
 		searching = true;
@@ -69,8 +71,12 @@
 				const body = await res.json();
 				if (seq !== searchSeq) return; // תגובה ישנה — כבר הוקלד משהו אחר
 				liveResults = Array.isArray(body?.users) ? body.users : [];
+				liveFuzzy = body?.fuzzy === true;
 			} catch {
-				if (seq === searchSeq) liveResults = null;
+				if (seq === searchSeq) {
+					liveResults = null;
+					liveFuzzy = false;
+				}
 			} finally {
 				if (seq === searchSeq) searching = false;
 			}
@@ -81,6 +87,7 @@
 	// כשיש תוצאות חיות — הן קודמות לתוצאות שהגיעו מהשרת בטעינת הדף.
 	const adminIds = $derived(new Set(data.admins.map((a: { id: number }) => a.id)));
 	const activeQ = $derived(liveResults !== null ? q.trim() : (data.q ?? ''));
+	const activeFuzzy = $derived(liveResults !== null ? liveFuzzy : (data.fuzzy ?? false));
 	const searchResults = $derived(
 		((liveResults ?? data.results ?? []) as LiveUser[]).filter((u) => !adminIds.has(u.id))
 	);
@@ -254,6 +261,13 @@
 						</p>
 					{/if}
 				{:else}
+					{#if activeFuzzy}
+						<div
+							class="mb-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-200"
+						>
+							לא נמצאה התאמה מדויקת ל"{activeQ}" — אולי התכוונת לאחד מאלה:
+						</div>
+					{/if}
 					<div class="space-y-2">
 						{#each searchResults as u (u.id)}
 							<div class="rounded-2xl border border-white/10 bg-white/5 p-4">

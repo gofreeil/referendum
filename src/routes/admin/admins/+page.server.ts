@@ -21,15 +21,23 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	requireSuperAdmin(ctx.role);
 
 	if (!hasAdminToken()) {
-		return { user: ctx.user, tokenMissing: true, admins: [], q: '', results: [] };
+		return { user: ctx.user, tokenMissing: true, admins: [], q: '', results: [], fuzzy: false };
 	}
 
 	const q = (url.searchParams.get('q') || '').trim();
-	const [admins, results] = await Promise.all([
+	const emptySearch = { users: [], fuzzy: false };
+	const [admins, search] = await Promise.all([
 		listAdminUsers().catch(() => []),
-		q.length >= 2 ? searchUsersDeep(q).catch(() => []) : Promise.resolve([])
+		q.length >= 2 ? searchUsersDeep(q).catch(() => emptySearch) : Promise.resolve(emptySearch)
 	]);
-	return { user: ctx.user, tokenMissing: false, admins, q, results };
+	return {
+		user: ctx.user,
+		tokenMissing: false,
+		admins,
+		q,
+		results: search.users,
+		fuzzy: search.fuzzy && search.users.length > 0
+	};
 };
 
 export const actions: Actions = {

@@ -4,6 +4,8 @@
 //   1. שאילתת $containsi על email/username/nickname (השדות המובטחים בסכמה).
 //   2. אם אין תוצאות (למשל חיפוש שם בעברית שלא קיים ב-username) —
 //      סריקה מקומית של כל שדות הטקסט ברשומות, בדפדוף מוגבל.
+//   3. אין התאמה מדויקת? — התאמה עמומה (מרחק לוינשטיין), ומוחזר דגל
+//      fuzzy כדי שהמסך יציג "אולי התכוונת".
 // ============================================================
 
 import { json } from '@sveltejs/kit';
@@ -23,7 +25,8 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	if (q.length < 2 || !hasAdminToken()) return json({ users: [] });
 
 	try {
-		return json({ users: await searchUsersDeep(q) });
+		const { users, fuzzy } = await searchUsersDeep(q);
+		return json({ users, fuzzy: fuzzy && users.length > 0 });
 	} catch (e) {
 		console.error('[admin] user search failed:', e);
 		return json({ users: [], error: 'החיפוש ברשימת המשתמשים נכשל — אפשר לחפש שוב' });
