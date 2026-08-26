@@ -136,6 +136,39 @@ export async function searchUsers(q: string): Promise<SlimUser[]> {
 	return (Array.isArray(arr) ? arr : []).map(toSlim);
 }
 
+// חיפוש עמוק — דפדוף מוגבל וסריקה מקומית כשהשאילתה המסוננת לא מצאה כלום
+const SCAN_PAGE_SIZE = 1000; // maxLimit של השרת
+const MAX_SCAN = 5000; // תקרת רשומות לסריקה המקומית
+const MAX_RESULTS = 10;
+
+/**
+ * חיפוש משתמשים לחיפוש החי: קודם השאילתה המסוננת של Strapi
+ * (email/username/nickname); אם היא נכשלה או לא מצאה — סריקה מקומית של כל
+ * שדות הטקסט ברשומות, בדפדוף מוגבל. תופסת גם שמות בעברית ושדות לא-סטנדרטיים.
+ */
+export async function searchUsersDeep(q: string): Promise<SlimUser[]> {
+	const filtered = await searchUsers(q).catch(() => [] as SlimUser[]);
+	if (filtered.length > 0) return filtered.slice(0, MAX_RESULTS);
+
+	const needle = q.toLowerCase();
+	const matches: SlimUser[] = [];
+	for (let start = 0; start < MAX_SCAN; start += SCAN_PAGE_SIZE) {
+		const arr = await api(
+			`/api/users?pagination[start]=${start}&pagination[limit]=${SCAN_PAGE_SIZE}`
+		);
+		const batch = Array.isArray(arr) ? (arr as Record<string, unknown>[]) : [];
+		for (const u of batch) {
+			const hit = Object.values(u).some(
+				(v) => typeof v === 'string' && v.toLowerCase().includes(needle)
+			);
+			if (hit) matches.push(toSlim(u));
+			if (matches.length >= MAX_RESULTS) break;
+		}
+		if (batch.length < SCAN_PAGE_SIZE || matches.length >= MAX_RESULTS) break;
+	}
+	return matches;
+}
+
 /** משתמש בודד (רזה) לבדיקות הגנה לפני שינוי תפקיד */
 export async function getUserSlim(userId: string | number): Promise<SlimUser | null> {
 	try {

@@ -38,10 +38,51 @@
 		String(u.id) === String(data.user?.id) ||
 		(!!u.email && u.email.toLowerCase() === data.user?.email?.toLowerCase());
 
-	// תוצאות החיפוש בלי מי שכבר אדמין (מופיע ברשימה למעלה)
+	// ── חיפוש חי בין המשתמשים הרשומים ──
+	// שליפה מושהית (350ms) מ-/admin/admins/search, עם שומר תגובות-ישנות (מונה רצף).
+	// שליחת הטופס (GET) עדיין עובדת כרגיל — החיפוש החי רק חוסך את הרענון.
+	interface LiveUser {
+		id: number;
+		name: string;
+		email: string;
+		app_role?: string;
+		registered_site?: string;
+	}
+	let liveResults: LiveUser[] | null = $state(null);
+	let searching = $state(false);
+	let searchSeq = 0;
+	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+	function onSearchInput() {
+		clearTimeout(debounceTimer);
+		const term = q.trim();
+		if (term.length < 2) {
+			searching = false;
+			liveResults = null;
+			return;
+		}
+		searching = true;
+		debounceTimer = setTimeout(async () => {
+			const seq = ++searchSeq;
+			try {
+				const res = await fetch(`/admin/admins/search?q=${encodeURIComponent(term)}`);
+				const body = await res.json();
+				if (seq !== searchSeq) return; // תגובה ישנה — כבר הוקלד משהו אחר
+				liveResults = Array.isArray(body?.users) ? body.users : [];
+			} catch {
+				if (seq === searchSeq) liveResults = null;
+			} finally {
+				if (seq === searchSeq) searching = false;
+			}
+		}, 350);
+	}
+
+	// תוצאות החיפוש בלי מי שכבר אדמין (מופיע ברשימה למעלה).
+	// כשיש תוצאות חיות — הן קודמות לתוצאות שהגיעו מהשרת בטעינת הדף.
 	const adminIds = $derived(new Set(data.admins.map((a: { id: number }) => a.id)));
+	const activeQ = $derived(liveResults !== null ? q.trim() : (data.q ?? ''));
 	const searchResults = $derived(
-		(data.results ?? []).filter((u: { id: number }) => !adminIds.has(u.id))
+		((liveResults ?? data.results ?? []) as LiveUser[]).filter((u) => !adminIds.has(u.id))
 	);
 
 	const submitFn = (id: string) => () => {
@@ -188,7 +229,8 @@
 					type="search"
 					name="q"
 					bind:value={q}
-					placeholder="חיפוש משתמש לפי אימייל או שם (לפחות 2 תווים)…"
+					oninput={onSearchInput}
+					placeholder="חיפוש לפי שם / מייל / טלפון (לפחות 2 תווים)…"
 					class="w-full max-w-md rounded-xl border border-white/20 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-blue-500/60 focus:outline-none"
 				/>
 				<button
@@ -198,11 +240,19 @@
 				</button>
 			</form>
 
-			{#if data.q && data.q.length >= 2}
+			{#if searching}
+				<p class="mb-4 text-sm text-gray-400">🔍 מחפש בין המשתמשים הרשומים…</p>
+			{/if}
+
+			{#if activeQ.length >= 2}
 				{#if searchResults.length === 0}
-					<p class="rounded-2xl border border-dashed border-white/15 py-10 text-center text-gray-500">
-						לא נמצאו משתמשים מתאימים ל"{data.q}"
-					</p>
+					{#if !searching}
+						<p
+							class="rounded-2xl border border-dashed border-white/15 py-10 text-center text-gray-500"
+						>
+							לא נמצא משתמש רשום התואם ל"{activeQ}"
+						</p>
+					{/if}
 				{:else}
 					<div class="space-y-2">
 						{#each searchResults as u (u.id)}

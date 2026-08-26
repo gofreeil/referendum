@@ -9,7 +9,7 @@ import {
 	listAdminUsers,
 	requireSuperAdmin,
 	resolveRole,
-	searchUsers,
+	searchUsersDeep,
 	setUserRole
 } from '$lib/server/admin';
 
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	const q = (url.searchParams.get('q') || '').trim();
 	const [admins, results] = await Promise.all([
 		listAdminUsers().catch(() => []),
-		q.length >= 2 ? searchUsers(q).catch(() => []) : Promise.resolve([])
+		q.length >= 2 ? searchUsersDeep(q).catch(() => []) : Promise.resolve([])
 	]);
 	return { user: ctx.user, tokenMissing: false, admins, q, results };
 };
