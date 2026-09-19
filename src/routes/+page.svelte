@@ -2,7 +2,6 @@
     import { issues } from '$lib/referendumData';
     import {
         SITE_DESCRIPTION,
-        PARENT_SITE,
         canonical,
         websiteSchema,
         organizationSchema,
@@ -44,17 +43,6 @@
     <p class="max-w-2xl text-lg text-gray-300">
         סוגיות אקטואליות, צוותי מומחים, ניתוח צדדים מעמיק וניקוד מקצועי – ואתם מצביעים.
     </p>
-    <!-- שיוך גלוי לתנועה-האם מעל הקפל (לא רק בפוטר) כדי שגוגל יקשר "יוצאים לחירות" לאתר. -->
-    <a
-        href={PARENT_SITE.url}
-        target="_blank"
-        rel="noopener"
-        class="inline-flex items-center gap-1.5 rounded-full border border-[#3b5794] bg-[#1c2f5a] px-4 py-1.5 text-xs md:text-sm font-semibold text-gray-200 shadow-md hover:bg-[#2a4379] hover:text-white transition-colors"
-    >
-        <span aria-hidden="true">👉</span>
-        מיזם של התנועה החברתית יוצאים לחירות
-    </a>
-
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mt-4">
         <div class="rounded-2xl bg-white/5 border border-white/10 p-4">
             <div class="text-3xl font-black text-blue-300">{issues.length}</div>

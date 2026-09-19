@@ -33,7 +33,7 @@
             <p class="text-gray-300 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
                 {SITE_NAME} הוא אתר להבעת דעה על הסוגיות האקטואליות שעל סדר היום הציבורי.
                 בכל סוגיה מוצגים הצדדים השונים, צוותי מומחים שמנתחים אותם והשוואה שקופה ביניהם – ואתם מצביעים.
-                האתר חלק מרשת האתרים של התנועה החברתית "יוצאים לחירות", והשימוש בו חינם ופתוח לכולם.
+                האתר הוא מיזם של התנועה החברתית <a href="https://gofreeil.com" target="_blank" rel="noopener" class="text-blue-300 underline hover:text-white">יוצאים לחירות</a>, מופעל בהתנדבות והשימוש בו חינם ופתוח לכולם.
                 {SITE_TAGLINE}!
             </p>
         </div>
