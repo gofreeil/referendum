@@ -15,11 +15,12 @@
 </script>
 
 <svelte:head>
-    <title>משאלי העם – הקול שלך נספר</title>
-    <meta name="description" content="משאלי העם – הבע דעתך על הסוגיות האקטואליות שעל סדר היום הציבורי" />
+    <!-- כותרת גיבוי בלבד: כל דף ציבורי דורס אותה ב-<svelte:head> משלו -->
+    <title>משאלי העם – הקול שלך נספר | יוצאים לחירות</title>
+    <meta name="description" content="משאלי העם של תנועת יוצאים לחירות – הבע דעתך על הסוגיות האקטואליות שעל סדר היום הציבורי" />
     <link rel="icon" href="/images/referendum-logo.png" type="image/png" />
     <link rel="apple-touch-icon" href="/images/referendum-logo.png" />
-    <meta property="og:title" content="משאלי העם – הקול שלך נספר" />
+    <meta property="og:title" content="משאלי העם – הקול שלך נספר | יוצאים לחירות" />
     <meta property="og:description" content="פלטפורמת משאלי עם: סוגיות, צוותי מומחים, ניתוח צדדים ותוצאות חיות" />
     <meta property="og:image" content="/images/referendum-logo.png" />
     <meta property="og:type" content="website" />

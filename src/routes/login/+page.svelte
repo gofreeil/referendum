@@ -60,7 +60,7 @@
 	}
 </script>
 
-<svelte:head><title>התחברות</title></svelte:head>
+<svelte:head><title>התחברות | משאלי העם | יוצאים לחירות</title></svelte:head>
 
 <div class="min-h-[80vh] flex items-center justify-center px-4 py-12" dir="rtl">
 	<div class="w-full max-w-md rounded-3xl border border-white/10 bg-[#0f172a] p-8 shadow-2xl">

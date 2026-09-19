@@ -14,7 +14,7 @@
     };
 </script>
 
-<svelte:head><title>הנכסים שלי | משאלי העם</title></svelte:head>
+<svelte:head><title>הנכסים שלי | משאלי העם | יוצאים לחירות</title></svelte:head>
 
 <section class="mx-auto max-w-4xl px-3 py-6 md:px-4" dir="rtl">
     <div class="mb-5 flex flex-wrap items-end justify-between gap-3">

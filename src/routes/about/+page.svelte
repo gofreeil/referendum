@@ -3,7 +3,7 @@
     // השו"ת נבנה ממקור אמת אחד ($lib/aboutFaq) וגם מוזרק כסכמת FAQPage
     // (JSON-LD) כדי שמנועי חיפוש ומנועי AI יזהו מה מטרת האתר ולמי הוא מיועד.
     import { ABOUT_FAQ } from '$lib/aboutFaq';
-    import { SITE_NAME, SITE_TAGLINE, canonical, faqSchema } from '$lib/seo';
+    import { SITE_NAME, SITE_TAGLINE, PARENT_BRAND, canonical, faqSchema } from '$lib/seo';
     import JsonLd from '$lib/components/JsonLd.svelte';
 
     const description =
@@ -11,10 +11,10 @@
 </script>
 
 <svelte:head>
-    <title>אודותינו | {SITE_NAME}</title>
+    <title>אודותינו | {SITE_NAME} | {PARENT_BRAND}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical('/about')} />
-    <meta property="og:title" content="אודותינו | {SITE_NAME}" />
+    <meta property="og:title" content="אודותינו | {SITE_NAME} | {PARENT_BRAND}" />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical('/about')} />
 </svelte:head>

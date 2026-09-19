@@ -47,7 +47,7 @@
 </script>
 
 <svelte:head>
-    <title>פרסום באתר משאלי העם — חשיפה לקהל מעורב ואכפתי</title>
+    <title>פרסום באתר משאלי העם — חשיפה לקהל מעורב ואכפתי | יוצאים לחירות</title>
     <meta name="description" content="פרסום באתר משאלי העם — טור פרסומות בדסקטופ ופרסומת מסך-מלא בנייד. מעצבים את הפרסומת ישירות באתר, משלמים, והמודעה עולה מיד אחרי אישור מנהל." />
     <link rel="canonical" href={canonical('/advertise')} />
     <meta name="robots" content="index, follow" />

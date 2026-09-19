@@ -1,5 +1,17 @@
 <script lang="ts">
     import { issues } from '$lib/referendumData';
+    import {
+        SITE_DESCRIPTION,
+        PARENT_SITE,
+        canonical,
+        websiteSchema,
+        organizationSchema,
+    } from '$lib/seo';
+    import JsonLd from '$lib/components/JsonLd.svelte';
+
+    // כותרת דף הבית: קצרה (עד ~60 תווים) + סיומת המותג "| יוצאים לחירות" — כמו בשאר
+    // אתרי הרשת, כדי שגוגל יקשר בין התנועה לאתר.
+    const title = 'משאלי העם — הקול שלך נספר | יוצאים לחירות';
 
     const totalParticipants = issues.reduce((s, i) => s + i.totalVotes, 0);
     const totalExperts = issues.reduce((s, i) => s + i.experts.length, 0);
@@ -10,13 +22,38 @@
     }
 </script>
 
+<svelte:head>
+    <title>{title}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <meta
+        name="keywords"
+        content="יוצאים לחירות, משאלי העם יוצאים לחירות, משאל עם, משאלי עם, הצבעה ציבורית, סוגיות אקטואליות, דעת הציבור, צוותי מומחים"
+    />
+    <link rel="canonical" href={canonical('/')} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={SITE_DESCRIPTION} />
+    <meta property="og:url" content={canonical('/')} />
+    <meta name="twitter:title" content={title} />
+</svelte:head>
+<JsonLd schema={[websiteSchema(), organizationSchema()]} />
+
 <section class="flex flex-col items-center text-center gap-6 py-10 px-4">
     <h1 class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-5xl md:text-7xl font-black text-transparent leading-tight">
-        משאלי העם
+        משאלי העם<span class="sr-only"> של יוצאים לחירות</span>
     </h1>
     <p class="max-w-2xl text-lg text-gray-300">
         סוגיות אקטואליות, צוותי מומחים, ניתוח צדדים מעמיק וניקוד מקצועי – ואתם מצביעים.
     </p>
+    <!-- שיוך גלוי לתנועה-האם מעל הקפל (לא רק בפוטר) כדי שגוגל יקשר "יוצאים לחירות" לאתר. -->
+    <a
+        href={PARENT_SITE.url}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1.5 rounded-full border border-[#3b5794] bg-[#1c2f5a] px-4 py-1.5 text-xs md:text-sm font-semibold text-gray-200 shadow-md hover:bg-[#2a4379] hover:text-white transition-colors"
+    >
+        <span aria-hidden="true">👉</span>
+        מיזם של התנועה החברתית יוצאים לחירות
+    </a>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mt-4">
         <div class="rounded-2xl bg-white/5 border border-white/10 p-4">

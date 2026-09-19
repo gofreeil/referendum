@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-    <title>תנאי הפרסום — {SITE_NAME}</title>
+    <title>תנאי הפרסום — {SITE_NAME} | יוצאים לחירות</title>
     <meta name="description" content="תנאי הפרסום באתר משאלי העם — מה מותר ומה אסור לפרסם, תשלום מראש לפי מסלול, אישור מנהל, ותנאי ההסרה." />
     <link rel="canonical" href={canonical('/advertise/terms')} />
 </svelte:head>

@@ -101,7 +101,7 @@
     );
 </script>
 
-<svelte:head><title>ניהול הפרסומת {ad.title} | משאלי העם</title></svelte:head>
+<svelte:head><title>ניהול הפרסומת {ad.title} | משאלי העם | יוצאים לחירות</title></svelte:head>
 
 <section class="mx-auto max-w-3xl px-3 py-6 md:px-4" dir="rtl">
     <a href="/advertise/manage" class="inline-block rounded-full border border-[#2c3a55] bg-[#172136] px-3.5 py-1.5 text-sm font-bold text-gray-100 shadow-md transition-colors hover:bg-[#223252] hover:text-white">

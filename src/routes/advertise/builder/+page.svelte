@@ -910,7 +910,7 @@
 </script>
 
 <svelte:head>
-    <title>בניית הפרסומת שלי | משאלי העם</title>
+    <title>בניית הפרסומת שלי | משאלי העם | יוצאים לחירות</title>
 </svelte:head>
 
 {#if !accessChecked}

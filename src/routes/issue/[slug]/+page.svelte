@@ -19,6 +19,11 @@
     }
 </script>
 
+<svelte:head>
+    <title>{issue ? issue.title : 'סוגיה לא נמצאה'} | משאלי העם | יוצאים לחירות</title>
+    {#if issue}<meta name="description" content={issue.description} />{/if}
+</svelte:head>
+
 {#if !issue}
     <div class="text-center py-20">
         <h1 class="text-3xl text-white">סוגיה לא נמצאה</h1>

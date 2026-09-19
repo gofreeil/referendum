@@ -65,7 +65,7 @@
 </script>
 
 <svelte:head>
-    <title>{ad.title} | משאלי העם</title>
+    <title>{ad.title} | משאלי העם | יוצאים לחירות</title>
     {#if lp.pitch}
         <meta name="description" content={lp.pitch} />
     {/if}
