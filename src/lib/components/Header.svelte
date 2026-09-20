@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { headerHeight } from '$lib/actions/headerHeight';
     import { t, locale } from 'svelte-i18n';
     import { get } from 'svelte/store';
     import { onMount } from 'svelte';
@@ -89,7 +90,7 @@
     const tFn = (k: string) => { void _loc; return get(t)(k); };
 </script>
 
-<header
+<header use:headerHeight
     class="sticky top-0 z-50 border-b-2 md:border-b-4 border-blue-600 shadow-lg backdrop-blur-lg"
     style="background: var(--bg-cream);"
 >
