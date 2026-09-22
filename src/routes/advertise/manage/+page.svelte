@@ -89,7 +89,7 @@
                             style="background: {ad.gradient || 'linear-gradient(135deg, #f59e0b, #ea580c)'}"
                         >
                             {#if ad.mainImage}
-                                <img src={ad.mainImage} alt="" class="h-full w-full object-cover" use:adImgFit={parseAdImageFit(ad.mainImageFit)} />
+                                <img src={ad.mainImage} alt="" loading="lazy" decoding="async" class="h-full w-full object-cover" use:adImgFit={parseAdImageFit(ad.mainImageFit)} />
                             {:else}
                                 <span class="text-4xl" aria-hidden="true">📢</span>
                             {/if}

@@ -1087,7 +1087,7 @@
                                 ondrop={(e) => handleDrop(e, "logo", (v) => (isDraggingLogo = v))}
                             >
                                 {#if logo}
-                                    <img src={logo} alt="לוגו" />
+                                    <img src={logo} alt="הלוגו שהועלה" decoding="async" />
                                     <button type="button" class="remove-x" onclick={(e) => { e.preventDefault(); clearImage("logo"); }} aria-label="הסר לוגו">✕</button>
                                 {:else}
                                     <div class="upload-sm-empty">
@@ -1163,7 +1163,7 @@
                                 >
                                     <img
                                         src={logoOriginal}
-                                        alt="לוגו"
+                                        alt="תצוגת חיתוך הלוגו"
                                         class="crop-img"
                                         draggable="false"
                                         style:transform="translate({cropOffsetX}px, {cropOffsetY}px) scale({cropZoom})"
@@ -1376,7 +1376,7 @@
                                     <div class="mobile-popup">
                                         <div class="popup-title-row">
                                             {#if logo}
-                                                <img src={logo} alt="לוגו" class="popup-logo-above" class:circle={logoShape === "circle"} />
+                                                <img src={logo} alt="לוגו {title || 'הפרסומת'}" class="popup-logo-above" class:circle={logoShape === "circle"} />
                                             {/if}
                                             <h3 class="popup-title-above" style:color={titleColor}>{title || "כותרת הפרסומת"}</h3>
                                         </div>
@@ -1434,7 +1434,7 @@
                                              לו מקבילת מקלדת מלאה (חיצים מזיזים אותו) ולכן זה תקין נגישותית -->
                                         <img
                                             src={logo}
-                                            alt="לוגו"
+                                            alt="לוגו {title || 'הפרסומת'}"
                                             class="ad-logo ad-logo-draggable"
                                             class:circle={logoShape === "circle"}
                                             class:pos-left={!logoFree && logoPosition === "left"}
@@ -1541,7 +1541,7 @@
                                 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
                                 <img
                                     src={logo}
-                                    alt="לוגו"
+                                    alt="לוגו {title || 'הפרסומת'}"
                                     class="ad-logo ad-logo-draggable"
                                     class:circle={logoShape === "circle"}
                                     class:pos-left={!logoFree && logoPosition === "left"}

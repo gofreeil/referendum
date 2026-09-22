@@ -724,7 +724,7 @@
                             <div class="landing-hero-inner" class:has-media={!!(landingImage || mainImage)}>
                                 <div class="landing-hero-content">
                                     {#if logo}
-                                        <img src={logo} alt="לוגו" class="landing-logo" class:circle={logoShape === "circle"} />
+                                        <img src={logo} alt="לוגו {title || 'הפרסומת'}" class="landing-logo" class:circle={logoShape === "circle"} />
                                     {/if}
                                     <h1>{landingHeadline || title || "כותרת דף הנחיתה"}</h1>
                                     <p>{landingPitch || subtitle || "משפט הפתיחה יופיע כאן"}</p>
@@ -756,7 +756,7 @@
                                 </div>
                                 {#if landingImage || mainImage}
                                     <div class="landing-hero-media">
-                                        <img src={landingImage || mainImage} alt={title} />
+                                        <img src={landingImage || mainImage} alt="תמונת דף הנחיתה של {title || 'הפרסומת'}" decoding="async" />
                                     </div>
                                 {/if}
                             </div>

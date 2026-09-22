@@ -371,7 +371,7 @@
                 <div class="ad-card-img">
                     {#if ad.mainImage}
                         <!-- אותו מיקום/זום שהמפרסם קבע — המנהל מאשר את מה שבאמת יוצג -->
-                        <img src={ad.mainImage} alt={ad.title} use:adImgFit={parseAdImageFit(ad.mainImageFit)} />
+                        <img src={ad.mainImage} alt={ad.title} loading="lazy" decoding="async" use:adImgFit={parseAdImageFit(ad.mainImageFit)} />
                     {:else}
                         <div class="no-img">אין תמונה</div>
                     {/if}

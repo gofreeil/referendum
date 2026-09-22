@@ -217,6 +217,7 @@
 							src={ad.image}
 							alt={ad.title}
 							class="benefit-img"
+							loading="lazy"
 							decoding="async"
 							style={ad.imageScale ? `transform: scale(${ad.imageScale});` : ''}
 						/>

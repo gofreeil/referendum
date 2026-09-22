@@ -10,6 +10,7 @@
     import AdInterstitial from '$lib/components/AdInterstitial.svelte';
     import WelcomeScreen from '$lib/components/WelcomeScreen.svelte';
     import { navigating } from '$app/state';
+    import { DEFAULT_OG_IMAGE } from '$lib/seo';
 
     let { children, data } = $props();
 </script>
@@ -18,14 +19,15 @@
     <!-- כותרת גיבוי בלבד: כל דף ציבורי דורס אותה ב-<svelte:head> משלו -->
     <title>משאלי העם – הקול שלך נספר | יוצאים לחירות</title>
     <meta name="description" content="משאלי העם של תנועת יוצאים לחירות – הבע דעתך על הסוגיות האקטואליות שעל סדר היום הציבורי" />
-    <link rel="icon" href="/images/referendum-logo.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/images/referendum-logo.png" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/images/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:title" content="משאלי העם – הקול שלך נספר | יוצאים לחירות" />
     <meta property="og:description" content="פלטפורמת משאלי עם: סוגיות, צוותי מומחים, ניתוח צדדים ותוצאות חיות" />
-    <meta property="og:image" content="/images/referendum-logo.png" />
+    <meta property="og:image" content={DEFAULT_OG_IMAGE} />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/images/referendum-logo.png" />
+    <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
 </svelte:head>
 
 <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
@@ -48,9 +50,24 @@
         <main id="main-content" tabindex="-1" class="main-content">
             <div class="hero-banner">
                 <div class="hero-banner-img-wrap">
-                    <img src="/images/hero-banner.png" alt="כנסת ישראל, דגל המדינה ומאזני הצדק" />
+                    <!-- תמונת ה-LCP: נטענת בעדיפות גבוהה, בלי lazy; width/height שומרים מקום לפני הטעינה -->
+                    <img
+                        src="/images/hero-banner.webp"
+                        alt="כנסת ישראל, דגל המדינה ומאזני הצדק"
+                        width="1600"
+                        height="378"
+                        fetchpriority="high"
+                        decoding="async"
+                    />
                 </div>
-                <img class="hero-logo" src="/images/referendum-logo.png" alt="משאלי העם" />
+                <img
+                    class="hero-logo"
+                    src="/images/referendum-logo.webp"
+                    alt="לוגו משאלי העם"
+                    width="400"
+                    height="400"
+                    decoding="async"
+                />
             </div>
             {@render children()}
         </main>
@@ -117,6 +134,7 @@
     .hero-banner-img-wrap > img {
         width: 100%;
         height: auto;
+        aspect-ratio: 1600 / 378;
         display: block;
     }
     .hero-logo {

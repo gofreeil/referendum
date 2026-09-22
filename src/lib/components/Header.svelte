@@ -105,8 +105,11 @@
                         <div class="relative">
                             <div class="h-10 w-10 flex-shrink-0">
                                 <img
-                                    src="/images/referendum-logo.png"
-                                    alt="משאלי העם"
+                                    src="/images/referendum-logo.webp"
+                                    alt="משאלי העם – לדף הבית"
+                                    width="400"
+                                    height="400"
+                                    decoding="async"
                                     class="w-full h-full object-contain"
                                 />
                             </div>
@@ -174,8 +177,11 @@
                         class="flex h-[72px] w-[72px] items-center justify-center transition-transform hover:scale-105"
                     >
                         <img
-                            src="/images/referendum-logo.png"
-                            alt="משאלי העם"
+                            src="/images/referendum-logo.webp"
+                            alt="משאלי העם – לדף הבית"
+                            width="400"
+                            height="400"
+                            decoding="async"
                             class="w-full h-full object-contain"
                         />
                     </a>

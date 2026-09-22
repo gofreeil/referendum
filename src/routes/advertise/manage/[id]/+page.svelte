@@ -160,7 +160,7 @@
                 <div class="relative h-40 overflow-hidden rounded-xl border border-[#2c3a55] md:h-48"
                      style="background: {ad.gradient || 'linear-gradient(135deg, #f59e0b, #ea580c)'}">
                     {#if ad.mainImage}
-                        <img src={ad.mainImage} alt="" class="h-full w-full object-cover" use:adImgFit={parseAdImageFit(ad.mainImageFit)} />
+                        <img src={ad.mainImage} alt="" loading="lazy" decoding="async" class="h-full w-full object-cover" use:adImgFit={parseAdImageFit(ad.mainImageFit)} />
                     {:else}
                         <div class="flex h-40 items-center justify-center text-5xl md:h-48" aria-hidden="true">📢</div>
                     {/if}
