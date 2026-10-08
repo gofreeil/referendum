@@ -12,6 +12,8 @@ export interface StrapiUser {
 	displayName?: string;
 	firstname?: string;
 	lastname?: string;
+	/** תמונת הפרופיל: קישור (Google/Facebook) או data:image שהועלה ידנית בקהילה */
+	avatar_url?: string | null;
 	// תפקיד ניהולי משותף לכל האתרים (idx_admin, ch_admin, ref_admin, super_admin…)
 	app_role?: string;
 	nickname?: string;

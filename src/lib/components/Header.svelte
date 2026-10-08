@@ -5,7 +5,10 @@
     import { onMount } from 'svelte';
 
     // משתמש מחובר (מגיע מ-+layout.server דרך +layout.svelte); null = אנונימי
-    let { user = null }: { user?: { name: string; email: string } | null } = $props();
+    let { user = null }: { user?: { name: string; email: string; image?: string } | null } = $props();
+
+    // תמונת הפרופיל לא נטענה (קישור שפג / חסום) → חוזרים לאות הראשונה
+    let avatarBroken = $state(false);
 
     let languages = [
         { name: "עברית", code: "he", flag: "il" },
@@ -215,7 +218,20 @@
                         class="flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-sm font-bold text-white transition-colors"
                         title="האזור האישי שלי"
                     >
-                        <span class="flex h-6 w-6 items-center justify-center rounded-full login-grad text-xs">👤</span>
+                        {#if user.image && !avatarBroken}
+                            <img
+                                src={user.image}
+                                alt=""
+                                width="24"
+                                height="24"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror={() => (avatarBroken = true)}
+                                class="h-6 w-6 rounded-full object-cover"
+                            />
+                        {:else}
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full login-grad text-xs font-bold" aria-hidden="true">{(user.name || user.email).charAt(0).toUpperCase()}</span>
+                        {/if}
                         <span class="hidden sm:inline max-w-[120px] truncate">{user.name || user.email}</span>
                     </a>
                 {:else}
