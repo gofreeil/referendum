@@ -117,8 +117,8 @@
 					<span>המשך עם Facebook</span>
 				</button>
 				{/if}
-				<a href="/register" class="mt-1 text-sm text-gray-400 underline hover:text-gray-200">מעדיפים אימייל וסיסמה? הרשמה ידנית</a>
-				<a href="/login" class="text-sm text-gray-500 underline hover:text-gray-300">חזרה להתחברות</a>
+				<a href="/register?redirect={encodeURIComponent(data.returnTo || '/')}" class="mt-1 text-sm text-gray-400 underline hover:text-gray-200">מעדיפים אימייל וסיסמה? הרשמה ידנית</a>
+				<a href="/login?redirect={encodeURIComponent(data.returnTo || '/')}" class="text-sm text-gray-500 underline hover:text-gray-300">חזרה להתחברות</a>
 			</div>
 		{/if}
 	</div>
