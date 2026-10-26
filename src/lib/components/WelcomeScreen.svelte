@@ -67,7 +67,7 @@
 		role="dialog"
 		aria-modal="true"
 		dir="rtl"
-		class="fixed inset-0 z-[1300] overflow-y-auto
+		class="welcome-dark fixed inset-0 z-[1300] overflow-y-auto
 			{kind === 'new'
 			? 'bg-gradient-to-br from-blue-950 via-[#070b14] to-purple-950'
 			: 'bg-gradient-to-br from-emerald-950 via-[#070b14] to-blue-950'}"

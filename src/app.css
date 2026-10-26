@@ -287,3 +287,12 @@ textarea {
 html {
     scroll-padding-top: calc(var(--header-height, 90px) + 1.25rem);
 }
+
+/* ===== משטחים כהים בכוונה (מסך הברכה — WelcomeScreen) =====
+   ההמרות הגלובליות למעלה הופכות טקסט בהיר לכהה, כי כל האתר על קרם. מסך הברכה נשאר
+   על רקע כהה (גרדיאנט blue/purple-950) ולכן הטקסט נעלם. .welcome-dark מחזירה בתוכו
+   את הצבעים המקוריים (ספציפיות גבוהה יותר + !important). */
+.welcome-dark .text-white,
+.welcome-dark .hover\:text-white:hover { color: #fff !important; }
+.welcome-dark .text-gray-200 { color: #e5e7eb !important; }
+.welcome-dark .text-purple-200 { color: #e9d5ff !important; }
