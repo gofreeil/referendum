@@ -67,6 +67,7 @@
     let logo = $state("");
     let logoOriginal = $state("");
     let logoShape = $state(/** @type {'square' | 'circle'} */ ("square"));
+    let logoBg = $state(/** @type {'white' | 'black' | 'clear'} */ ("white"));
     let hasCircleCrop = $state(false);
     let logoPosition = $state(/** @type {'right' | 'left' | 'cta'} */ ("right"));
     let logoPositionExplicit = $state(false);
@@ -83,10 +84,13 @@
     let logoDragging = $state(false);
 
     /** מיקום חופשי → style inline. ריק כשהלוגו על העוגן */
+    let logoBgCss = $derived(
+        logoBg === "black" ? "background:#000;" : logoBg === "clear" ? "background:transparent;box-shadow:none;" : "",
+    );
     let logoFreeStyle = $derived(
-        logoFree
+        (logoFree
             ? `left:${logoFreeX}%; top:${logoFreeY}%; right:auto; bottom:auto; transform:translate(-50%,-50%);`
-            : "",
+            : "") + logoBgCss,
     );
 
     // מדדי הגרירה, נמדדים בלחיצה מול התצוגה שבה הלוגו יושב (דמו חי / כרטיס
@@ -460,6 +464,7 @@
             // נגרר, הרצועה חזרה לגובה הבסיסי והכותרת איבדה את צבעה.
             adStyle: {
                 logoShape,
+                logoBg,
                 logoAnchor: logoPosition,
                 logoX: logoFreeX,
                 logoY: logoFreeY,
@@ -731,6 +736,7 @@
                     logo = d.logo ?? "";
                     logoOriginal = d.logoOriginal ?? d.logo ?? "";
                     logoShape = d.logoShape ?? "square";
+                    logoBg = d.logoBg === "black" || d.logoBg === "clear" ? d.logoBg : "white";
                     hasCircleCrop = Boolean(d.hasCircleCrop);
                     logoPosition = d.logoPosition ?? "right";
                     logoPositionExplicit = Boolean(d.logoPositionExplicit);
@@ -796,7 +802,7 @@
     $effect(() => {
         if (!browser) return;
         const snapshot = {
-            logo, logoOriginal, hasCircleCrop, logoShape, logoPosition, logoPositionExplicit,
+            logo, logoOriginal, hasCircleCrop, logoShape, logoBg, logoPosition, logoPositionExplicit,
             logoFreeX, logoFreeY,
             mainImage, mainImageObjectX, mainImageObjectY, mainImageZoom, title, titleColor, titleOffsetY,
             subtitle, hoverText, cta, gradient, diagHeight,
@@ -1113,6 +1119,14 @@
                                     </div>
                                 </div>
                                 <div>
+                                    <p class="control-label">רקע הלוגו</p>
+                                    <div class="seg-group">
+                                        <button type="button" onclick={() => (logoBg = "white")} class="seg-btn" class:active={logoBg === "white"}>לבן</button>
+                                        <button type="button" onclick={() => (logoBg = "black")} class="seg-btn" class:active={logoBg === "black"}>שחור</button>
+                                        <button type="button" onclick={() => (logoBg = "clear")} class="seg-btn" class:active={logoBg === "clear"}>שקוף</button>
+                                    </div>
+                                </div>
+                                <div>
                                     <p class="control-label">מיקום הלוגו</p>
                                     <div class="seg-group">
                                         <button type="button" onclick={() => setLogoAnchor("right")} class="seg-btn" class:active={!logoFree && logoPosition === "right"}>ימין</button>
@@ -1377,7 +1391,7 @@
                                     <div class="mobile-popup">
                                         <div class="popup-title-row">
                                             {#if logo}
-                                                <img src={logo} alt="לוגו {title || 'הפרסומת'}" class="popup-logo-above" class:circle={logoShape === "circle"} />
+                                                <img src={logo} alt="לוגו {title || 'הפרסומת'}" class="popup-logo-above" class:circle={logoShape === "circle"} style={logoBgCss} />
                                             {/if}
                                             <h3 class="popup-title-above" style:color={titleColor}>{title || "כותרת הפרסומת"}</h3>
                                         </div>
@@ -2337,8 +2351,8 @@
     .crop-reset:hover { background: rgba(245, 158, 11, 0.85); color: black; }
     .crop-zoom {
         position: absolute;
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        background: rgba(8,145,178,0.85);
+        border: 1px solid rgba(103,232,249,0.9);
         color: white;
         width: 32px;
         height: 32px;
@@ -2353,7 +2367,7 @@
         transition: background 0.15s;
         z-index: 2;
     }
-    .crop-zoom:hover { background: rgba(245, 158, 11, 0.85); color: black; }
+    .crop-zoom:hover { background: rgba(103,232,249,0.95); color: black; }
     .crop-zoom.zoom-in { bottom: 8px; right: 8px; }
     .crop-zoom.zoom-out { bottom: 8px; left: 8px; }
     .crop-hint {
