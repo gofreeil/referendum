@@ -365,6 +365,9 @@
                     logoShape = d.logoShape ?? "square";
                     logoBg = d.logoBg === "black" || d.logoBg === "clear" ? d.logoBg : "white";
                     gradient = d.gradient ?? gradient;
+                    lpAlign = d.lpLogoAlign === "center" || d.lpLogoAlign === "left" ? d.lpLogoAlign : "right";
+                    lpBg = d.lpLogoBg === "white" || d.lpLogoBg === "black" || d.lpLogoBg === "clear" ? d.lpLogoBg : null;
+                    lpSize = typeof d.lpLogoSize === "number" ? d.lpLogoSize : null;
                     adStyleFromDraft = parseAdStyle({
                         logoShape: d.logoShape,
                         logoBg: d.logoBg,
@@ -407,6 +410,7 @@
                 landingHeadline, landingPitch, landingExtended, landingImage, landingAdvantages,
                 phone, whatsapp, website, email,
                 products, uniqueness, address, hours,
+                lpLogoAlign: lpAlign, lpLogoBg: lpBg, lpLogoSize: lpSize,
             };
             localStorage.setItem(LS_KEY, JSON.stringify(merged));
             draftSaveFailed = false;
@@ -564,6 +568,7 @@
                 landingHeadline, landingPitch, landingExtended, landingImage, landingAdvantages,
                 phone, whatsapp, website, email,
                 products, uniqueness, address, hours,
+                lpLogoAlign: lpAlign, lpLogoBg: lpBg, lpLogoSize: lpSize,
             }));
         } catch {
             leavingToLogin = false;
