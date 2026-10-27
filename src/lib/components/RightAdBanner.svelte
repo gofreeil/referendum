@@ -4,7 +4,7 @@
     import { markAdSeen, trackAdClick } from "$lib/adTrack";
     import { adImgFit, parseAdImageFit } from "$lib/adImageFit";
     import {
-        parseAdStyle, legacyAdStyle, adStyleVars, logoAnchorClass, logoFreeStyle, logoBgStyle, logoSizeStyle, titleSizeStyle, logoCornerSide,
+        parseAdStyle, legacyAdStyle, adStyleVars, logoAnchorClass, logoFreeStyle, logoBgStyle, logoSizeStyle, titleSizeStyle, hoverLogoStyle, logoCornerSide,
         type AdStyle,
     } from "$lib/adStyle";
     import { logoClearance } from "$lib/logoClearance";
@@ -152,6 +152,9 @@
                                     </p>
                                 {/if}
                             </div>
+                            {#if item.ad.logo && st.hoverLogo}
+                                <img src={item.ad.logo} alt="" class="bg-white p-[3px] shadow-md" style={hoverLogoStyle(st, logoBgStyle(st.logoBg))} />
+                            {/if}
                         </div>
                     </div>
                     <!-- כרטיס מוצר מהחנות - בלי רצועת המחיר ("₪.. · לצפייה בחנות") -->

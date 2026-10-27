@@ -69,6 +69,10 @@
     let logoShape = $state(/** @type {'square' | 'circle'} */ ("square"));
     let logoBg = $state(/** @type {'white' | 'black' | 'clear'} */ ("white"));
     let logoSize = $state(36);
+    let hoverLogo       = $state(false);
+    let hoverLogoX      = $state(50);
+    let hoverLogoY      = $state(22);
+    let hoverLogoSize   = $state(56);
     let hasCircleCrop = $state(false);
     let logoPosition = $state(/** @type {'right' | 'left' | 'cta'} */ ("right"));
     let logoPositionExplicit = $state(false);
@@ -468,6 +472,10 @@
                 logoShape,
                 logoBg,
                 logoSize,
+                hoverLogo,
+                hoverLogoX,
+                hoverLogoY,
+                hoverLogoSize,
                 logoAnchor: logoPosition,
                 logoX: logoFreeX,
                 logoY: logoFreeY,
@@ -742,6 +750,10 @@
                     logoShape = d.logoShape ?? "square";
                     logoBg = d.logoBg === "black" || d.logoBg === "clear" ? d.logoBg : "white";
                     logoSize = typeof d.logoSize === "number" ? d.logoSize : 36;
+                    hoverLogo = d.hoverLogo === true;
+                    hoverLogoX = typeof d.hoverLogoX === 'number' ? d.hoverLogoX : 50;
+                    hoverLogoY = typeof d.hoverLogoY === 'number' ? d.hoverLogoY : 22;
+                    hoverLogoSize = typeof d.hoverLogoSize === 'number' ? d.hoverLogoSize : 56;
                     hasCircleCrop = Boolean(d.hasCircleCrop);
                     logoPosition = d.logoPosition ?? "right";
                     logoPositionExplicit = Boolean(d.logoPositionExplicit);
@@ -1379,6 +1391,29 @@
                     ></textarea>
                     <div class="char-count">{hoverText.length}/90</div>
 
+                    {#if logo}
+                        <div class="mt-3 rounded-lg border border-white/10 bg-black/20 p-2.5 space-y-2">
+                            <label class="flex items-center gap-2 text-sm font-bold text-gray-300 cursor-pointer">
+                                <input type="checkbox" bind:checked={hoverLogo} class="accent-amber-500" />
+                                הצג את הלוגו גם בטקסט הריחוף
+                            </label>
+                            {#if hoverLogo}
+                                <div class="flex items-center gap-2 text-xs text-gray-400">
+                                    <span class="w-16 shrink-0">אופקי</span>
+                                    <input type="range" min="0" max="100" step="1" class="flex-1 accent-amber-500" bind:value={hoverLogoX} />
+                                </div>
+                                <div class="flex items-center gap-2 text-xs text-gray-400">
+                                    <span class="w-16 shrink-0">אנכי</span>
+                                    <input type="range" min="0" max="100" step="1" class="flex-1 accent-amber-500" bind:value={hoverLogoY} />
+                                </div>
+                                <div class="flex items-center gap-2 text-xs text-gray-400">
+                                    <span class="w-16 shrink-0">גודל</span>
+                                    <input type="range" min="20" max="120" step="2" class="flex-1 accent-amber-500" bind:value={hoverLogoSize} />
+                                </div>
+                            {/if}
+                        </div>
+                    {/if}
+
                     <div class="step-nav-row">
                         <button type="button" class="step-nav-btn" onclick={() => advance(prevOf("hover"))}>→ שלב אחורה</button>
                         {#if hoverText}
@@ -1464,6 +1499,9 @@
                                     <div class="hover-overlay" style:opacity={showHover ? 1 : 0}>
                                         <h3 class="hover-title">{title || "הכותרת"}</h3>
                                         <p class="hover-text">{hoverText || "הטקסט שמופיע בריחוף העכבר"}</p>
+                                        {#if logo && hoverLogo}
+                                            <img src={logo} alt="" class="hover-logo" style="left:{hoverLogoX}%;top:{hoverLogoY}%;width:{hoverLogoSize}px;height:{hoverLogoSize}px;{logoShape === 'circle' ? 'border-radius:50%;' : ''}{logoBg === 'black' ? 'background:#000;' : logoBg === 'clear' ? 'background:transparent;box-shadow:none;' : ''}" />
+                                        {/if}
                                     </div>
                                     {#if logo}
                                         <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
@@ -1609,6 +1647,9 @@
                             <div class="hover-overlay" style:opacity={activeStep === "hover" ? 1 : 0}>
                                 <h3 class="hover-title">{title || "הכותרת"}</h3>
                                 <p class="hover-text">{hoverText || "הטקסט שמופיע בריחוף"}</p>
+                                {#if logo && hoverLogo}
+                                    <img src={logo} alt="" class="hover-logo" style="left:{hoverLogoX}%;top:{hoverLogoY}%;width:{hoverLogoSize}px;height:{hoverLogoSize}px;{logoShape === 'circle' ? 'border-radius:50%;' : ''}{logoBg === 'black' ? 'background:#000;' : logoBg === 'clear' ? 'background:transparent;box-shadow:none;' : ''}" />
+                                {/if}
                             </div>
                         </div>
                         <div class="promo-cta" style:background={gradient}>
@@ -2960,6 +3001,11 @@
         transition: opacity 1500ms ease;
         pointer-events: none;
         z-index: 6;
+    }
+    .hover-logo {
+        position: absolute; transform: translate(-50%, -50%);
+        object-fit: contain; border-radius: 6px; background: white; padding: 3px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.35);
     }
     .hover-title {
         color: white;
