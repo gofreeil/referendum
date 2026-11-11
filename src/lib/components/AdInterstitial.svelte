@@ -48,6 +48,7 @@
                 title={ad.title}
                 subtitle={ad.description}
                 cta={ad.cta}
+                showCta={!!ad.cta}
                 image={ad.image}
                 imageFit={ad.card.fit ?? { x: 50, y: 50, z: ad.imageScale ?? 1 }}
                 logo={ad.card.logo}

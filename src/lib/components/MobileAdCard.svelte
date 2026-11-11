@@ -120,6 +120,10 @@
                 {@render field('sub', subtitle, 70, 'mc-sub', 'p')}
             </div>
         </div>
+        {#if href && !editable}
+            <!-- התמונה כולה קישור - גם כשאין כפתור CTA -->
+            <a {href} {target} {rel} onclick={onctaclick} class="mc-imglink" aria-label={title}></a>
+        {/if}
         {#if onclose}
             <button type="button" class="mc-close" onclick={onclose} aria-label="✕">{countdown}</button>
         {:else}
@@ -196,6 +200,7 @@
         content: ''; float: left; width: 32%; height: 1.4em;
         shape-outside: polygon(0 0, 100% 0, 0 100%);
     }
+    .mc-imglink { position: absolute; inset: 0; z-index: 5; }
     .mc-close {
         position: absolute; top: 3.3cqw; left: 3.3cqw; z-index: 6;
         width: clamp(28px, 9cqw, 36px); height: clamp(28px, 9cqw, 36px); border-radius: 9999px;
