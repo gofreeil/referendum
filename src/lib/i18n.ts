@@ -8,6 +8,8 @@ register('he', () => Promise.resolve({
     connected: "מחוברים",
     contact_us: "צור קשר",
     all_rights_reserved: "כל הזכויות שמורות",
+    b_mobile_edit_hint: "לחיצה על טקסט לעריכה, גרירה להזזה.",
+    b_mobile_reset_pos: "אפס מיקומים",
 }));
 
 register('en', () => Promise.resolve({
@@ -18,6 +20,8 @@ register('en', () => Promise.resolve({
     connected: "Connected",
     contact_us: "Contact Us",
     all_rights_reserved: "All rights reserved",
+    b_mobile_edit_hint: "Tap text to edit, drag to move.",
+    b_mobile_reset_pos: "Reset positions",
 }));
 
 register('ru', () => Promise.resolve({
@@ -28,6 +32,8 @@ register('ru', () => Promise.resolve({
     connected: "Подключено",
     contact_us: "Связаться с нами",
     all_rights_reserved: "Все права защищены",
+    b_mobile_edit_hint: "Нажмите на текст для правки, перетащите для перемещения.",
+    b_mobile_reset_pos: "Сбросить позиции",
 }));
 
 init({

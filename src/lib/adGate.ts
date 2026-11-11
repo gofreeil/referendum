@@ -19,6 +19,7 @@ import { goto } from '$app/navigation';
 import type { Ad } from './adsData';
 import { rightAds } from './rightAdsData';
 import { approvedAds, loadApprovedAds } from './adSlots';
+import { parseAdStyle, legacyAdStyle } from './adStyle';
 
 /** מתג ראשי — כיבוי חירום של כל מנגנון פרסומת-הביניים. */
 export const ADS_ENABLED = true;
@@ -57,6 +58,13 @@ function currentInterstitialAds(): Ad[] {
         image: a.mainImage,
         color: '',
         gradientCss: a.gradient || 'linear-gradient(135deg, #f59e0b, #ea580c)',
+        // כרטיס הנייד המשותף (כמו שלב 7 בבילדר); כרטיס מוצר נשאר בעיצוב הקיים
+        card: a.shop ? undefined : {
+            logo: a.logo ?? '',
+            style: parseAdStyle(a.adStyle) ?? legacyAdStyle(a.title),
+            gradient: a.gradient || 'linear-gradient(135deg, #f59e0b, #ea580c)',
+            fit: a.mainImageFit,
+        },
     }));
     return [...real, inviteAd];
 }

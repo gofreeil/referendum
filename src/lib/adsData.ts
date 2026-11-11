@@ -5,6 +5,8 @@
 // (משאלי העם) במודעה של קהילה בשכונה.
 // ============================================================
 
+import type { AdStyle } from './adStyle';
+
 export interface Ad {
     id: number;
     title: string;
@@ -20,6 +22,8 @@ export interface Ad {
     gradientCss?: string;   // רקע כמחרוזת CSS מלאה (מודעות מהבילדר) — גובר על color
     /** מזהה המודעה ב-Strapi (רק למודעות מהבילדר) — למדידה בדשבורד המפרסם */
     adId?: string;
+    /** מודעה משולמת מהבילדר: פרסומת-הביניים בנייד מצוירת כמו התצוגה בשלב 7 */
+    card?: { logo: string; style: AdStyle; gradient: string; fit?: { x: number; y: number; z: number } };
 }
 
 export const ads: Ad[] = [

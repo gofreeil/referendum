@@ -3,6 +3,9 @@
     import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
     import { adImgFit, AD_ZOOM_MIN, AD_ZOOM_MAX } from "$lib/adImageFit";
+    import { _ } from "svelte-i18n";
+    import { parseAdStyle, DEFAULT_AD_STYLE } from "$lib/adStyle";
+    import MobileAdCard from "$lib/components/MobileAdCard.svelte";
     import { logoClearance } from "$lib/logoClearance";
     import { normalizePlanDays } from "$lib/adPlans";
     import {
@@ -296,11 +299,35 @@
     let lpLogoSize = $state(/** @type {number | null} */ (null));
     let titleOffsetY = $state(0);
     let subtitle = $state("");
+    // הזזת הכותרת / הכיתוב / הכפתור בכרטיס הנייד (שלב 7), באחוזי רוחב הכרטיס
+    let mobTitleX = $state(0); let mobTitleY = $state(0);
+    let mobSubX = $state(0); let mobSubY = $state(0);
+    let mobCtaX = $state(0); let mobCtaY = $state(0);
+    /** @param {unknown} v */
+    const num0 = (v) => (typeof v === "number" && isFinite(v) ? v : 0);
+    /**
+     * @param {"title" | "sub" | "cta"} key
+     * @param {number} x
+     * @param {number} y
+     */
+    function moveMobile(key, x, y) {
+        if (key === "title") { mobTitleX = x; mobTitleY = y; }
+        else if (key === "sub") { mobSubX = x; mobSubY = y; }
+        else { mobCtaX = x; mobCtaY = y; }
+    }
+    function resetMobilePositions() {
+        mobTitleX = mobTitleY = mobSubX = mobSubY = mobCtaX = mobCtaY = 0;
+    }
     let hoverText = $state("");
     let cta = $state("הקלק לפרטים והזמנות");
     // גרדיאנט כמחרוזת CSS - תואם לשדה color של adsData.js באתר הזה
     let gradient = $state("linear-gradient(135deg, #f59e0b, #ea580c)");
     let diagHeight = $state(12);
+    // העיצוב שמזין את כרטיס הנייד המשותף (אותו נרמול כמו בשרת)
+    let mobCardStyle = $derived(parseAdStyle({
+        logoShape, logoBg, logoSize, bandHeight: diagHeight, titleColor, titleFontSize,
+        mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
+    }) ?? { ...DEFAULT_AD_STYLE });
 
     // שדות דף הנחיתה - נטענים/נשמרים יחד עם הטיוטה, נערכים בדף ההמשך
     let landingHeadline = $state("");
@@ -502,6 +529,7 @@
                 titleOffsetY,
                 titleFontSize,
                 titleColor,
+                mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
             },
             landing: {
                 headline: landingHeadline,
@@ -818,6 +846,9 @@
                     lpLogoAlign = d.lpLogoAlign === "center" || d.lpLogoAlign === "left" ? d.lpLogoAlign : "right";
                     lpLogoBg = d.lpLogoBg === "white" || d.lpLogoBg === "black" || d.lpLogoBg === "clear" ? d.lpLogoBg : null;
                     lpLogoSize = typeof d.lpLogoSize === "number" ? d.lpLogoSize : null;
+                    mobTitleX = num0(d.mobTitleX); mobTitleY = num0(d.mobTitleY);
+                    mobSubX = num0(d.mobSubX); mobSubY = num0(d.mobSubY);
+                    mobCtaX = num0(d.mobCtaX); mobCtaY = num0(d.mobCtaY);
                     subtitle = d.subtitle ?? "";
                     hoverText = d.hoverText ?? "";
                     cta = d.cta || "הקלק לפרטים והזמנות";
@@ -876,6 +907,7 @@
             mainImage, mainImageObjectX, mainImageObjectY, mainImageZoom,
             mobileImage, mobileImageObjectX, mobileImageObjectY, mobileImageZoom, title, titleColor, titleOffsetY, titleFontSize, lpLogoAlign, lpLogoBg, lpLogoSize,
             subtitle, hoverText, cta, gradient, diagHeight,
+            mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
             landingHeadline, landingPitch, landingExtended, landingImage, landingAdvantages,
             uniqueness, phone, whatsapp, website, email, address, hours, products,
         };
@@ -1534,32 +1566,25 @@
                             <div class="phone-screen">
                                 <div class="phone-notch"></div>
                                 <div class="phone-content">
-                                    <div class="mobile-popup">
-                                        <div class="popup-title-row">
-                                            {#if logo}
-                                                <img src={logo} alt="לוגו {title || 'הפרסומת'}" class="popup-logo-above" class:circle={logoShape === "circle"} style={logoBgCss} />
-                                            {/if}
-                                            <h3 class="popup-title-above" style:color={titleColor}>{title || "כותרת הפרסומת"}</h3>
-                                        </div>
-                                        <div class="popup-img pro-img-wrap">
-                                            {#if previewMobileImage}
-                                                <img src={previewMobileImage} alt={title} use:adImgFit={previewMobileFit} />
-                                            {:else}
-                                                <div class="img-placeholder">התמונה הראשית</div>
-                                            {/if}
-                                            <div class="pro-diag" style:background={gradient}></div>
-                                            <div class="pro-title-wrap mobile">
-                                                <p class="pro-sub"><span class="logo-avoid" data-anchor="bottom" aria-hidden="true"></span>{subtitle || "משפט קצר / סלוגן"}</p>
-                                            </div>
-                                            <div class="close-countdown">5</div>
-                                        </div>
-                                        <div class="popup-body">
-                                            <button type="button" class="popup-cta" style:background={gradient}>← {cta}</button>
-                                        </div>
+                                    <div class="mobile-popup-slot">
+                                        <MobileAdCard
+                                            editable
+                                            {title} {subtitle} {cta} {gradient}
+                                            image={previewMobileImage}
+                                            imageFit={previewMobileFit}
+                                            {logo}
+                                            st={mobCardStyle}
+                                            placeholder="התמונה הראשית"
+                                            onedit={(f, v) => { if (f === "title") title = v; else if (f === "sub") subtitle = v; else cta = v; }}
+                                            onmove={moveMobile}
+                                        />
+                                        {#if mobTitleX || mobTitleY || mobSubX || mobSubY || mobCtaX || mobCtaY}
+                                            <button type="button" class="mobile-reset-pos" onclick={resetMobilePositions}>{$_("b_mobile_reset_pos")}</button>
+                                        {/if}
                                     </div>
                                 </div>
                             </div>
-                            <p class="preview-caption">כך תיראה הפרסומת בנייד - חלונית שנפתחת לגולש</p>
+                            <p class="preview-caption">כך תיראה הפרסומת בנייד - חלונית שנפתחת לגולש <b>{$_("b_mobile_edit_hint")}</b></p>
                         </div>
                     {:else}
                         <div class="preview-frame">
@@ -2803,6 +2828,11 @@
         align-items: center;
         justify-content: center;
         padding: 1rem;
+    }
+    .mobile-popup-slot { width: 100%; max-width: 240px; }
+    .mobile-reset-pos {
+        display: block; margin: 0.4rem auto 0; font-size: 0.7rem; padding: 0.15rem 0.6rem;
+        border-radius: 9999px; background: rgba(255,255,255,0.08); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4);
     }
     .mobile-popup {
         width: 100%;
