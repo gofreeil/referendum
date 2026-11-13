@@ -4,7 +4,11 @@
     import { goto } from "$app/navigation";
     import { adImgFit, AD_ZOOM_MIN, AD_ZOOM_MAX } from "$lib/adImageFit";
     import { _ } from "svelte-i18n";
-    import { parseAdStyle, DEFAULT_AD_STYLE } from "$lib/adStyle";
+    import {
+        parseAdStyle, DEFAULT_AD_STYLE,
+        DEFAULT_SUB_FONT_SIZE, SUB_FONT_SIZE_MIN, SUB_FONT_SIZE_MAX,
+        DEFAULT_SUB_LINE_HEIGHT, SUB_LINE_HEIGHT_MIN, SUB_LINE_HEIGHT_MAX,
+    } from "$lib/adStyle";
     import MobileAdCard from "$lib/components/MobileAdCard.svelte";
     import { logoClearance } from "$lib/logoClearance";
     import { normalizePlanDays } from "$lib/adPlans";
@@ -299,6 +303,16 @@
     let lpLogoSize = $state(/** @type {number | null} */ (null));
     let titleOffsetY = $state(0);
     let subtitle = $state("");
+    // טיפוגרפיית תת-הכותרת (שלב 5): גודל, רווח בין שורות ויישור - נוסעים עם המודעה ב-adStyle
+    let subFontSize = $state(DEFAULT_SUB_FONT_SIZE);
+    let subLineHeight = $state(DEFAULT_SUB_LINE_HEIGHT);
+    let subAlign = $state(/** @type {'right' | 'center' | 'left' | 'justify'} */ ("right"));
+    const subAligns = /** @type {const} */ ([
+        { id: "right", label: "לימין", icon: "➡" },
+        { id: "center", label: "למרכז", icon: "↔" },
+        { id: "left", label: "לשמאל", icon: "⬅" },
+        { id: "justify", label: "מילוי רוחב", icon: "☰" },
+    ]);
     // הזזת הכותרת / הכיתוב / הכפתור בכרטיס הנייד (שלב 7), באחוזי רוחב הכרטיס
     let mobTitleX = $state(0); let mobTitleY = $state(0);
     let mobSubX = $state(0); let mobSubY = $state(0);
@@ -326,6 +340,7 @@
     // העיצוב שמזין את כרטיס הנייד המשותף (אותו נרמול כמו בשרת)
     let mobCardStyle = $derived(parseAdStyle({
         logoShape, logoBg, logoSize, bandHeight: diagHeight, titleColor, titleFontSize,
+        subFontSize, subLineHeight, subAlign,
         mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
     }) ?? { ...DEFAULT_AD_STYLE });
 
@@ -420,6 +435,10 @@
         const topRight = Math.max(0, topLeft - 10);
         document.documentElement.style.setProperty("--diag-top-left", `${topLeft}%`);
         document.documentElement.style.setProperty("--diag-top-right", `${topRight}%`);
+        // אותם משתנים שהאתר מקבל מ-adStyleVars - כאן על ה-root, לכל התצוגות בדף
+        document.documentElement.style.setProperty("--sub-size", `${subFontSize}rem`);
+        document.documentElement.style.setProperty("--sub-lh", String(subLineHeight));
+        document.documentElement.style.setProperty("--sub-align", subAlign);
     });
 
     /**
@@ -529,6 +548,7 @@
                 titleOffsetY,
                 titleFontSize,
                 titleColor,
+                subFontSize, subLineHeight, subAlign,
                 mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
             },
             landing: {
@@ -850,6 +870,9 @@
                     mobSubX = num0(d.mobSubX); mobSubY = num0(d.mobSubY);
                     mobCtaX = num0(d.mobCtaX); mobCtaY = num0(d.mobCtaY);
                     subtitle = d.subtitle ?? "";
+                    subFontSize = typeof d.subFontSize === "number" ? d.subFontSize : DEFAULT_SUB_FONT_SIZE;
+                    subLineHeight = typeof d.subLineHeight === "number" ? d.subLineHeight : DEFAULT_SUB_LINE_HEIGHT;
+                    subAlign = d.subAlign === "center" || d.subAlign === "left" || d.subAlign === "justify" ? d.subAlign : "right";
                     hoverText = d.hoverText ?? "";
                     cta = d.cta || "הקלק לפרטים והזמנות";
                     gradient = d.gradient ?? gradient;
@@ -906,7 +929,7 @@
             logoFreeX, logoFreeY,
             mainImage, mainImageObjectX, mainImageObjectY, mainImageZoom,
             mobileImage, mobileImageObjectX, mobileImageObjectY, mobileImageZoom, title, titleColor, titleOffsetY, titleFontSize, lpLogoAlign, lpLogoBg, lpLogoSize,
-            subtitle, hoverText, cta, gradient, diagHeight,
+            subtitle, subFontSize, subLineHeight, subAlign, hoverText, cta, gradient, diagHeight,
             mobTitleX, mobTitleY, mobSubX, mobSubY, mobCtaX, mobCtaY,
             landingHeadline, landingPitch, landingExtended, landingImage, landingAdvantages,
             uniqueness, phone, whatsapp, website, email, address, hours, products,
@@ -1113,7 +1136,15 @@
             <div class="builder-steps">
 
                 <!-- =================== שלב 1: תמונה ראשית =================== -->
-                <section bind:this={stepRefs.image} class="step-card">
+                <!-- לחיצה על הכרטיס היא קיצור עכבר; משתמש מקלדת מגיע לשלב דרך onfocusin -->
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <section bind:this={stepRefs.image} class="step-card"
+                         onclick={(e) => {
+                             if (/** @type {HTMLElement} */ (e.target).closest("button, a")) return;
+                             if (activeStep !== "image") activeStep = "image";
+                         }}
+                         onfocusin={() => { if (activeStep !== "image") activeStep = "image"; }}>
                     <div class="step-head" class:step-title-light={litFlags.image.title}>
                         <span class="step-num" class:step-num-light={litFlags.image.num}>1</span>
                         <h2>העלו את התמונה הראשית</h2>
@@ -1439,6 +1470,48 @@
                     />
                     <div class="char-count">{subtitle.length}/70</div>
 
+                    <!-- טיפוגרפיה של תת-הכותרת: גודל, רווח בין שורות ויישור. הערכים
+                         נוסעים עם המודעה דרך adStyle, ולכן מה שנראה כאן הוא מה שיתפרסם -->
+                    <div class="sub-type-panel">
+                        <p class="sub-type-title">עיצוב הטקסט</p>
+                        <div class="sub-type-row">
+                            <span class="sub-type-label">גודל הטקסט</span>
+                            <input type="range" class="sub-type-range"
+                                   min={SUB_FONT_SIZE_MIN} max={SUB_FONT_SIZE_MAX} step="0.02"
+                                   bind:value={subFontSize} aria-label="גודל הטקסט"
+                                   oninput={() => activeStep === "subtitle" || (activeStep = "subtitle")} />
+                            <span class="sub-type-value">{subFontSize.toFixed(2)}</span>
+                        </div>
+                        <div class="sub-type-row">
+                            <span class="sub-type-label">רווח בין שורות</span>
+                            <input type="range" class="sub-type-range"
+                                   min={SUB_LINE_HEIGHT_MIN} max={SUB_LINE_HEIGHT_MAX} step="0.05"
+                                   bind:value={subLineHeight} aria-label="רווח בין שורות"
+                                   oninput={() => activeStep === "subtitle" || (activeStep = "subtitle")} />
+                            <span class="sub-type-value">{subLineHeight.toFixed(2)}</span>
+                        </div>
+                        <div class="sub-type-row">
+                            <span class="sub-type-label">יישור</span>
+                            <div class="sub-type-aligns">
+                                {#each subAligns as opt}
+                                    <button type="button"
+                                            onclick={() => (subAlign = opt.id)}
+                                            title={opt.label}
+                                            aria-pressed={subAlign === opt.id}
+                                            class="sub-type-align-btn"
+                                            class:is-active={subAlign === opt.id}>
+                                        <span aria-hidden="true">{opt.icon}</span>
+                                        <span class="sub-type-align-text">{opt.label}</span>
+                                    </button>
+                                {/each}
+                            </div>
+                        </div>
+                        <button type="button" class="sub-type-reset"
+                                onclick={() => { subFontSize = DEFAULT_SUB_FONT_SIZE; subLineHeight = DEFAULT_SUB_LINE_HEIGHT; subAlign = "right"; }}>
+                            איפוס לברירת המחדל
+                        </button>
+                    </div>
+
                     <div class="step-nav-row">
                         <button type="button" class="step-nav-btn" onclick={() => advance(prevOf("subtitle"))}>→ שלב אחורה</button>
                         {#if subtitle}
@@ -1448,7 +1521,14 @@
                 </section>
 
                 <!-- =================== שלב 6: טקסט בריחוף =================== -->
-                <section bind:this={stepRefs.hover} class="step-card">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <section bind:this={stepRefs.hover} class="step-card"
+                         onclick={(e) => {
+                             if (/** @type {HTMLElement} */ (e.target).closest("button, a, input, textarea")) return;
+                             if (activeStep !== "hover") activeStep = "hover";
+                         }}
+                         onfocusin={() => { if (activeStep !== "hover") activeStep = "hover"; }}>
                     <div class="step-head" class:step-title-light={litFlags.hover.title}>
                         <span class="step-num" class:step-num-light={litFlags.hover.num}>6</span>
                         <h2>טקסט בריחוף העכבר</h2>
@@ -1597,7 +1677,7 @@
                                 onfocus={() => (hoverPreview = true)}
                                 onblur={() => (hoverPreview = false)}
                             >
-                                <div class="pro-img-wrap clean-card-img" use:logoClearance={[title, subtitle, logo, logoFreeX, logoFreeY, logoPosition, diagHeight, titleOffsetY]}>
+                                <div class="pro-img-wrap clean-card-img" use:logoClearance={[title, subtitle, logo, logoFreeX, logoFreeY, logoPosition, diagHeight, titleOffsetY, subFontSize, subLineHeight, subAlign]}>
                                     {#if mainImage}
                                         <img src={mainImage} alt={title} class="ad-img" style:opacity={showHover ? 0 : 1} style:object-position="{mainImageObjectX}% {mainImageObjectY}%" use:adImgFit={mainImageFit} />
                                     {:else}
@@ -1695,7 +1775,7 @@
                 <div class="live-demo-card">
                     <p class="live-demo-label">👁 דמו חי</p>
                     <div class="live-demo-frame" dir="rtl">
-                        <div class="pro-img-wrap live-demo-img-wrap" use:logoClearance={[title, subtitle, logo, logoFreeX, logoFreeY, logoPosition, diagHeight, titleOffsetY]}>
+                        <div class="pro-img-wrap live-demo-img-wrap" use:logoClearance={[title, subtitle, logo, logoFreeX, logoFreeY, logoPosition, diagHeight, titleOffsetY, subFontSize, subLineHeight, subAlign]}>
                             {#if mainImage}
                                 <img
                                     src={mainImage}
@@ -2994,19 +3074,56 @@
         bottom: 0;
         padding: 0.55rem 0.7rem 1.1rem;
         z-index: 4;
-        text-align: right;
+        text-align: var(--sub-align, right);
         transition: opacity 1500ms ease;
     }
     .pro-title-wrap.mobile { padding: 0.65rem 0.85rem 1.25rem; }
     .pro-sub {
         color: rgba(255, 255, 255, 0.95);
         font-weight: 600;
-        font-size: 0.7rem;
-        line-height: 1.3;
+        /* גודל/רווח/יישור מגיעים מהמשתנים של שלב 5 (אותם ש-adStyleVars מייצר באתר) */
+        font-size: var(--sub-size, 0.7rem);
+        line-height: var(--sub-lh, 1.3);
         margin: 0;
         text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     }
     .pro-title-wrap.mobile .pro-sub { font-size: 0.9rem; }
+
+    /* ============== טיפוגרפיית תת-הכותרת (שלב 5) ============== */
+    .sub-type-panel {
+        margin-top: 0.85rem;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 0.9rem;
+        background: rgba(255,255,255,0.04);
+        padding: 0.75rem 0.9rem;
+        display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .sub-type-title { margin: 0; color: rgb(253,230,138); font-weight: 900; font-size: 0.85rem; }
+    .sub-type-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .sub-type-label { color: rgb(209,213,219); font-weight: 700; font-size: 0.78rem; min-width: 6.5rem; }
+    .sub-type-range { flex: 1 1 8rem; min-width: 7rem; accent-color: rgb(245,158,11); }
+    .sub-type-value {
+        color: white; font-weight: 700; font-size: 0.75rem;
+        min-width: 2.6rem; text-align: center; font-variant-numeric: tabular-nums;
+    }
+    .sub-type-aligns { display: flex; gap: 0.35rem; flex-wrap: wrap; flex: 1 1 auto; }
+    .sub-type-align-btn {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.35rem 0.6rem; border-radius: 0.6rem; cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05);
+        color: rgb(209,213,219); font-size: 0.72rem; font-weight: 700;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .sub-type-align-btn:hover { color: white; background: rgba(255,255,255,0.10); }
+    .sub-type-align-btn.is-active { background: rgb(245,158,11); border-color: rgb(245,158,11); color: black; }
+    @media (max-width: 480px) {
+        .sub-type-align-text { display: none; }
+    }
+    .sub-type-reset {
+        align-self: flex-start; background: none; border: none; cursor: pointer;
+        color: rgb(252,211,77); font-size: 0.72rem; font-weight: 700;
+        text-decoration: underline; text-underline-offset: 2px; padding: 0;
+    }
     /* השורה הראשונה של הסלוגן מתקצרת בעקבות האלכסון */
     .pro-sub::before {
         content: "";

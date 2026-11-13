@@ -115,14 +115,16 @@
         bottom: 0;
         padding: 0.55rem 0.7rem 1.1rem;
         z-index: 4;
-        text-align: right;
+        text-align: var(--sub-align, right);
         pointer-events: none;
     }
     .promo-sub {
         color: rgba(255, 255, 255, 0.95);
         font-weight: 600;
-        font-size: 0.7rem;
-        line-height: 1.3;
+        /* גודל/רווח/יישור מגיעים מ-adStyleVars - מה שהמפרסם כיוון בשלב 5.
+           ה-fallback הוא הערך שהיה קבוע כאן, כדי שמודעות ותיקות לא ישתנו */
+        font-size: var(--sub-size, 0.7rem);
+        line-height: var(--sub-lh, 1.3);
         margin: 0;
         text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     }
