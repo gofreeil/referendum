@@ -55,7 +55,8 @@ function currentInterstitialAds(): Ad[] {
         cta: a.shop ? '' : (a.cta || 'לפרטים'),
         hover: a.hover || undefined,
         href: `/ads/${a.id}`,
-        image: a.mainImage,
+        // תמונה ייעודית לנייד שהמפרסם העלה בבילדר גוברת על הראשית
+        image: a.mobileImage || a.mainImage,
         color: '',
         gradientCss: a.gradient || 'linear-gradient(135deg, #f59e0b, #ea580c)',
         // כרטיס הנייד המשותף (כמו שלב 7 בבילדר); כרטיס מוצר נשאר בעיצוב הקיים
@@ -63,7 +64,7 @@ function currentInterstitialAds(): Ad[] {
             logo: a.logo ?? '',
             style: parseAdStyle(a.adStyle) ?? legacyAdStyle(a.title),
             gradient: a.gradient || 'linear-gradient(135deg, #f59e0b, #ea580c)',
-            fit: a.mainImageFit,
+            fit: a.mobileImage ? a.mobileImageFit : a.mainImageFit,
         },
     }));
     return [...real, inviteAd];

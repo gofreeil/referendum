@@ -6,6 +6,25 @@ import { notifyAdminsAdEdited } from '$lib/server/adsNotify';
 import { resolveRole } from '$lib/server/adsAdmin';
 import { adPayloadIssue } from '$lib/server/adBudget';
 
+// התמונה הייעודית לנייד של מודעה, לבעלים/סופר-אדמין בלבד - נמשכת כש"ערוך"
+// טוען את המודעה לבונה. היא לא נשלחת בנתוני הדף של דשבורד הנכס, ונתיב
+// התמונות הציבורי (/api/ad-image) מגיש מאושרות בלבד - כאן גם ממתינה נטענת.
+export const GET: RequestHandler = async ({ params, url, locals }) => {
+    const session = await locals.auth();
+    if (!session?.user) throw error(401, 'צריך להתחבר');
+    if (url.searchParams.get('part') !== 'mobile') throw error(400, 'part לא נתמך');
+
+    const ad = await getAd(params.id);
+    if (!ad) throw error(404, 'הפרסומת לא נמצאה');
+    if (!isAdOwner(ownerCandidateKeys(session.user), ad) && (await resolveRole(session)) !== 'super_admin') {
+        throw error(403, 'אין לך הרשאה לפרסומת הזו');
+    }
+    return json(
+        { mobileImage: ad.mobileImage, mobileImageFit: ad.mobileImageFit },
+        { headers: { 'cache-control': 'private, no-store' } },
+    );
+};
+
 // עריכה מחדש של מודעה קיימת בידי המפרסם שהעלה אותה (דשבורד הנכס →
 // הבונה → שלב השליחה), או בידי סופר-אדמין (מסך ניהול הפרסומות → "ערוך").
 // תוכן בלבד: הסטטוס, התוקף, המסלול, התשלום והבעלות נשארים כפי שהיו,
@@ -50,6 +69,9 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
             logo: payload.logo ?? '',
             mainImage: payload.mainImage,
             mainImageFit: payload.mainImageFit,
+            // תמונה ייעודית לנייד (לא חובה) - פרסומת-הביניים מציגה אותה במקום הראשית
+            mobileImage: typeof payload.mobileImage === 'string' ? payload.mobileImage : undefined,
+            mobileImageFit: payload.mobileImageFit,
             // העיצוב שנקבע בבילדר נשמר גם בעריכה — בלעדיו עריכת טקסט
             // הייתה מאפסת את מיקום הלוגו, גובה הרצועה וצבע הכותרת
             adStyle: payload.adStyle,

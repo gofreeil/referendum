@@ -55,6 +55,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
             logo: payload.logo ?? '',
             mainImage: payload.mainImage,
             mainImageFit: payload.mainImageFit,
+            // תמונה ייעודית לנייד (לא חובה) - פרסומת-הביניים מציגה אותה במקום הראשית
+            mobileImage: typeof payload.mobileImage === 'string' ? payload.mobileImage : undefined,
+            mobileImageFit: payload.mobileImageFit,
             // העיצוב מהבילדר (לוגו, רצועה, כותרת) — בלעדיו המודעה מתפרסמת
             // עם ברירות המחדל של האתר ולא עם מה שהמפרסם ראה על המסך
             adStyle: payload.adStyle,

@@ -25,6 +25,9 @@ export interface ApprovedAd {
     mainImage: string;  // data URI
     /** מיקום+זום מהבילדר; אופציונלי — קאש ישן בדפדפן עוד בלעדיו */
     mainImageFit?: { x: number; y: number; z: number };
+    /** תמונה ייעודית לנייד (כתובת); ריק/חסר = הנייד מציג את התמונה הראשית */
+    mobileImage?: string;
+    mobileImageFit?: { x: number; y: number; z: number };
     /** העיצוב מהבילדר (לוגו, רצועה, כותרת); חסר במודעות ותיקות */
     adStyle?: AdStyle | null;
     /** מספר המקום בלוח (1..16) — נקבע במסך הניהול; חסר בקאש ישן */

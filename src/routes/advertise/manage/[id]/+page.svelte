@@ -48,7 +48,20 @@
     const EDIT_KEY = 'ref_ad_edit_id';
     let editError = $state('');
 
-    function editInBuilder() {
+    async function editInBuilder() {
+        // התמונה הייעודית לנייד נמשכת רק עכשיו (היא לא חלק מנתוני הדף).
+        // כשל במשיכה עוצר את העריכה: אחרת השמירה הייתה מוחקת אותה מהמודעה.
+        let mobileImage = '';
+        if (ad.hasMobileImage) {
+            try {
+                const res = await fetch(`/api/ads/${encodeURIComponent(ad.id)}?part=mobile`);
+                if (!res.ok) throw new Error(String(res.status));
+                mobileImage = String((await res.json())?.mobileImage ?? '');
+            } catch {
+                editError = 'לא הצלחנו לטעון את התמונה לנייד של הפרסומת. נסו שוב בעוד רגע.';
+                return;
+            }
+        }
         const adv = (lp.advantages ?? []) as string[];
         // העיצוב שנשמר עם המודעה נטען לבונה כמו שהוא; מודעה ותיקה בלי עיצוב
         // שמור נשארת על ברירות המחדל של הבונה
@@ -72,6 +85,10 @@
             mainImageObjectX: ad.mainImageFit?.x ?? 50,
             mainImageObjectY: ad.mainImageFit?.y ?? 50,
             mainImageZoom: ad.mainImageFit?.z ?? 1,
+            mobileImage,
+            mobileImageObjectX: ad.mobileImageFit?.x ?? 50,
+            mobileImageObjectY: ad.mobileImageFit?.y ?? 50,
+            mobileImageZoom: ad.mobileImageFit?.z ?? 1,
             title: ad.title ?? '',
             titleColor: st?.titleColor ?? '#ffffff',
             titleOffsetY: st?.titleOffsetY ?? 0,
