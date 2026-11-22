@@ -3,6 +3,7 @@
     import { t, locale } from 'svelte-i18n';
     import { get } from 'svelte/store';
     import { onMount } from 'svelte';
+    import SignupTip from '$lib/components/SignupTip.svelte';
 
     // משתמש מחובר (מגיע מ-+layout.server דרך +layout.svelte); null = אנונימי
     let { user = null }: { user?: { name: string; email: string; image?: string } | null } = $props();
@@ -167,6 +168,20 @@
                                 </div>
                             {/if}
                         </div>
+                        <!-- אורח בנייד: כפתור התחברות קטן + יד ובועה "לא רשום עדיין?" (בעברית בלבד) -->
+                        {#if !user}
+                            <span class="relative inline-flex flex-shrink-0">
+                                <a
+                                    href="/login?redirect=/profile"
+                                    class="flex items-center justify-center w-9 h-9 rounded-xl login-grad hover:brightness-110 text-white transition-all"
+                                    aria-label="התחברות"
+                                    title="התחברות"
+                                >
+                                    <span aria-hidden="true">🕊️</span>
+                                </a>
+                                <SignupTip href="/login?redirect=/profile" from="#9333ea" to="#4338ca" hidden={!($locale || 'he').startsWith('he')} />
+                            </span>
+                        {/if}
                     </div>
                 </div>
         </div>
@@ -235,13 +250,17 @@
                         <span class="hidden sm:inline max-w-[120px] truncate">{user.name || user.email}</span>
                     </a>
                 {:else}
-                    <a
-                        href="/login?redirect=/profile"
-                        class="flex items-center gap-1.5 rounded-lg login-grad hover:brightness-110 px-3 py-2 text-sm font-bold text-white transition-all"
-                    >
-                        <span>🕊️</span>
-                        <span class="hidden sm:inline">התחברות</span>
-                    </a>
+                    <!-- אורח: יד ובועה "לא רשום עדיין?" תלויות מתחת לכפתור (בעברית בלבד) -->
+                    <span class="relative inline-flex flex-shrink-0">
+                        <a
+                            href="/login?redirect=/profile"
+                            class="flex items-center gap-1.5 rounded-lg login-grad hover:brightness-110 px-3 py-2 text-sm font-bold text-white transition-all"
+                        >
+                            <span>🕊️</span>
+                            <span class="hidden sm:inline">התחברות</span>
+                        </a>
+                        <SignupTip href="/login?redirect=/profile" from="#9333ea" to="#4338ca" hidden={!($locale || 'he').startsWith('he')} />
+                    </span>
                 {/if}
                 <!-- כפתור אודות -->
                 <a
